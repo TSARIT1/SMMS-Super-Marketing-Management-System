@@ -1,0 +1,82 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: GitHub Copilot <copilot@example.com>
+Date: Fri, 30 Jan 2026 00:00:00 +0000
+Subject: [PATCH] feat(frontend): accept VITE_API_URL or VITE_API_BASE_URL and normalize '/api'
+
+---
+ SuperMarket New Frontend/src/utils/api.js | 28 ++++++++++++++++++++++++++++
+ .env.example                           |  6 ++++++
+ DOCKER_DEPLOYMENT.md                   |  6 ++++++
+ README_DEV.md                          |  2 ++
+ 4 files changed, 42 insertions(+)
+
+diff --git a/SuperMarket New Frontend/src/utils/api.js b/SuperMarket New Frontend/src/utils/api.js
+index 1111111..2222222 100644
+--- a/SuperMarket New Frontend/src/utils/api.js
++++ b/SuperMarket New Frontend/src/utils/api.js
+@@
+-import axios from 'axios';
+-
+-// Vite exposes env vars via import.meta.env. Use VITE_API_URL (prefixed VITE_).
+-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+-
+-const api = axios.create({
+-  baseURL: API_BASE_URL,
+-  withCredentials: true,
+-});
++import axios from 'axios';
++
++// Vite exposes env vars via import.meta.env. Accept either VITE_API_URL or VITE_API_BASE_URL.
++// Normalize values so the final base URL always includes the '/api' segment.
++const _rawApiBase = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
++const API_BASE_URL = (() => {
++  try {
++    let u = String(_rawApiBase).trim().replace(/\/+$/, ''); // remove trailing slashes
++    if (!u.endsWith('/api')) u = `${u}/api`;
++    return u;
++  } catch (e) {
++    return 'http://localhost:8080/api';
++  }
++})();
++
++const api = axios.create({
++  baseURL: API_BASE_URL,
++  withCredentials: true,
++});
+@@
+diff --git a/.env.example b/.env.example
+index 3333333..4444444 100644
+--- a/.env.example
++++ b/.env.example
+@@
+-# Frontend Configuration
+-VITE_API_BASE_URL=http://localhost:8080
+-FRONTEND_PORT=3000
++# Frontend Configuration
++FRONTEND_PORT=3000
++# Frontend reads VITE_API_URL or VITE_API_BASE_URL. Both are accepted and will be normalized to ensure the final base ends with '/api'.
++VITE_API_URL=http://localhost:8080
++VITE_API_BASE_URL=http://localhost:8080
+diff --git a/DOCKER_DEPLOYMENT.md b/DOCKER_DEPLOYMENT.md
+index 5555555..6666666 100644
+--- a/DOCKER_DEPLOYMENT.md
++++ b/DOCKER_DEPLOYMENT.md
+@@
+-# Frontend Configuration
+-FRONTEND_PORT=3000
+-VITE_API_BASE_URL=http://localhost:8080
++# Frontend Configuration
++FRONTEND_PORT=3000
++# Frontend supports both VITE_API_URL and VITE_API_BASE_URL. Either may include '/api' or just the base URL; the frontend will normalize it to include '/api'.
++VITE_API_URL=http://localhost:8080
++VITE_API_BASE_URL=http://localhost:8080
+diff --git a/README_DEV.md b/README_DEV.md
+index 7777777..8888888 100644
+--- a/README_DEV.md
++++ b/README_DEV.md
+@@
+-   - npm run dev
++   - npm run dev
++   - If your backend runs on a non-default address, set `VITE_API_URL` or `VITE_API_BASE_URL` in an `.env` file or your shell (e.g. `VITE_API_URL=http://localhost:8080`).
+-- 
+2.39.0

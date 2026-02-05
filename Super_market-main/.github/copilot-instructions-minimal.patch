@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: GitHub Copilot <copilot@example.com>
+Date: Fri, 30 Jan 2026 00:00:00 +0000
+Subject: [PATCH] docs: add quick-start and API checklist (minimal)
+
+---
+ .github/copilot-instructions.md | 42 ++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+diff --git a/.github/copilot-instructions.md b/.github/copilot-instructions.md
+index 1111111..2222222 100644
+--- a/.github/copilot-instructions.md
++++ b/.github/copilot-instructions.md
+@@
+----
+-If you'd like, I can (a) condense this into a single short quick-start snippet, (b) add a short checklist for adding new services/APIs, or (c) open a draft PR with these changes applied. Which would you prefer? Please review and tell me which sections need more detail or correction. ✨
++---
++## One-page quick-start (copy-paste) 🚀
++Prereqs: Java 17+, Maven, Node 18+, Docker (optional).
++
++1. Frontend (dev):
++   cd "SuperMarket New Frontend" && npm install && npm run dev
++2. Backend (local profile):
++   cd "SuperMarket Backend" && ./mvnw.cmd -DskipTests package && java -jar target/SuperMarketBackend-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
++3. Start both (helper): `start-dev.ps1`
++4. E2E (Playwright): cd "SuperMarket New Frontend" && npx playwright install && npm run test:e2e
++5. Docker (prod-like): from repo root `cp .env.example .env` and `docker-compose up -d --build`
++
++## Checklist — Adding a new API / endpoint 🧭
++- Add controller under `SuperMarket Backend/src/main/java/in/main/controller/` with `@RequestMapping("/api/your")` and HTTP methods.
++- Implement business logic in a new or existing `service/` class.
++- Add DB access in `repository/` (extend `JpaRepository`) and update `entities/` if schema changes are required.
++- Add DTOs and mappers if the payload differs from entities.
++- Protect the endpoint via roles in `JwtSecurityConfig` (if admin-only use `/api/admin/**`).
++- Add unit tests (service) and integration/E2E tests for cross-stack flows. Use `/api/dev/**` helpers for test data when available.
++- Update `DOCKER_DEPLOYMENT.md` and `.env.example` if new services or env vars are required.
++
++---
++If you'd like, I can (a) condense this into a single short quick-start snippet, (b) add a short checklist for adding new services/APIs, or (c) open a draft PR with these changes applied. Which would you prefer? Please review and tell me which sections need more detail or correction. ✨
+-- 
+2.39.0

@@ -1,0 +1,79 @@
+version: '3.8'
+
+# Production Docker Compose Configuration
+# Use: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  mysql:
+    restart: always
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=500
+      - --innodb_buffer_pool_size=1G
+    volumes:
+      - /data/mysql:/var/lib/mysql  # Production volume path
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  backend:
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_JPA_SHOW_SQL: "false"
+      JAVA_OPTS: "-Xmx1024m -Xms512m -XX:+UseG1GC"
+    volumes:
+      - /data/uploads:/app/uploads  # Production uploads path
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+
+  frontend:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+
+# Production volumes with backup support
+volumes:
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/mysql
+      o: bind
+  backend_uploads:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/uploads
+      o: bind

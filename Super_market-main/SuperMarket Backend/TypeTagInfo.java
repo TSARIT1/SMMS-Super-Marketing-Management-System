@@ -1,0 +1,1 @@
+import java.lang.reflect.*; import com.sun.tools.javac.code.TypeTag; public class TypeTagInfo { public static void main(String[] args) throws Exception { Field[] fs = TypeTag.class.getDeclaredFields(); for (Field f: fs) System.out.println(f.getName()); } }

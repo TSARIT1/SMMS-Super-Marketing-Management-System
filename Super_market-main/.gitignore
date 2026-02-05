@@ -1,0 +1,26 @@
+# Eclipse
+.metadata/
+.classpath
+.project
+.settings/
+
+# Java
+*.class
+target/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+.env
+.env.local
+.env.*.local
+
+# Deployment scripts (keep .sh/.ps1/.bat in repo)
+# deploy.sh
+# deploy.ps1
+# deploy.bat

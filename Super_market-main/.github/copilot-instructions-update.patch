@@ -1,0 +1,98 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: GitHub Copilot <copilot@example.com>
+Date: Fri, 30 Jan 2026 00:00:00 +0000
+Subject: [PATCH] docs: update copilot instructions (quick-start + checklist)
+
+---
+ .github/copilot-instructions.md | 126 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
+ create mode 100644 .github/copilot-instructions.md
+
+diff --git a/.github/copilot-instructions.md b/.github/copilot-instructions.md
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/.github/copilot-instructions.md
+@@ -0,0 +1,126 @@
++# Workspace notes for AI coding agents — Super Market (Monorepo)
++
++## Big picture 🔧
++- Monorepo with two main apps:
++  - **Backend**: Java Spring Boot app in `SuperMarket Backend/` (Maven, JPA, JWT auth).
++  - **Frontend**: React + Vite app in `SuperMarket New Frontend/` (Tailwind, Vite, Playwright E2E).
++- Dev uses H2 (local profile) and MySQL for production; Docker Compose orchestrates frontend/backend/mysql (see `DOCKER_DEPLOYMENT.md`).
++
++## Quick dev commands ✅
++- Frontend (Windows paths may include spaces):
++  - cd "SuperMarket New Frontend" && npm install && npm run dev
++- Backend (local profile):
++  - cd "SuperMarket Backend" && ./mvnw.cmd -DskipTests package
++  - java -jar target/SuperMarketBackend-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
++- Start both (helper): `start-dev.ps1` (starts frontend + backend and opens admin login).
++- Docker (prod-like): follow `DOCKER_DEPLOYMENT.md` or run `docker-compose up -d --build` from repo root.
++
++## Important environment / wiring ⚙️
++- API base: code reads `import.meta.env.VITE_API_URL` (frontend `src/utils/api.js`) and defaults to `http://localhost:8080/api`.
++- Docs and `.env.example` reference `VITE_API_BASE_URL` (docker); **be aware of this mismatch**—set `VITE_API_URL` (or both) to point at `http://localhost:8080`.
++- `.env.example`, `docker-compose.yml` and `DOCKER_DEPLOYMENT.md` contain canonical deployment environment variables.
++
++## Auth & security patterns 🔐
++- JWT-based, stateless security (see `JwtSecurityConfig.java`).
++  - Public: `/api/admin/login`, `/api/dev/**`, some `/api/audit/*` endpoints.
++  - Admin protected: `/api/admin/**`, `/api/audit/**` require roles `ADMIN` or `SUPER_ADMIN`.
++- Frontend stores token as `adminToken` in `localStorage` and admin profile as `admin`.
++- Local dev seeds default admin via `LocalDataLoader` → `admin@supermart.com` / `admin123`.
++
++## Testing & E2E 🧪
++- Playwright E2E target: `npm run test:e2e` (ensure `npx playwright install` first).
++- E2E tests use a dev-only endpoint `/api/dev/create-user` to create test data (see `e2e/admin.spec.js`). Keep dev endpoints stable if tests depend on them.
++
++## Code & architectural conventions 📚
++- Backend layering: `controller` → `service` → `repository` + `entities` (JPA). Package root is `in.main`.
++- Controllers use `@RequestMapping("/api/...")`. Add new APIs under `/api` and only expose them as needed in `JwtSecurityConfig`.
++- CORS and static file serving: `WebConfig` exposes `/uploads/**` and allows local origins (3000/3001).
++- Error handling is centralized using `GlobalExceptionHandler` (look for `@ControllerAdvice`).
++
++## Files to consult first (high signal) 📄
++- `DOCKER_DEPLOYMENT.md` — deployment + Docker Compose architecture (ports, envs).
++- `README_DEV.md` — local dev scripts & quick start.
++- `SuperMarket Backend/src/main/resources/application-local.properties` — local DB/profile config (H2).
++- `LocalDataLoader.java` — seeds (default admin credentials).
++- `SuperMarket New Frontend/src/utils/api.js` — how frontend builds API base and attaches JWT.
++- `JwtSecurityConfig.java`, `WebConfig.java` — security/CORS expectations.
++- `.env.example`, `docker-compose.yml` — production env variables and overrides.
++
++## Quick PR guidance / patterns ✅
++- When adding an admin-only endpoint: create controller mapping under `/api/admin/...`, add business logic in `service`, add DB access in `repository`, and update `JwtSecurityConfig` if needed.
++- For front-end API calls, rely on `api.js` axios instance (it injects Authorization header from `adminToken`).
++- Add E2E tests only if they can run against dev-seeded data or the test creates its own data via `/api/dev/**`.
++
++## Known quirks & gotchas ⚠️
++- Path names contain spaces (e.g., "SuperMarket New Frontend") — wrap paths in quotes on CLI on Windows.
++- Env var name mismatch: `VITE_API_URL` (code) vs `VITE_API_BASE_URL` (docs/docker). Prefer setting both to be safe.
++- Credentials and some DB passwords appear in checked-in properties for convenience — avoid using them for production and use `.env`/secrets instead.
++
++---
++## One-page quick-start (copy-paste) 🚀
++Prereqs: Java 17+, Maven, Node 18+, Docker (optional).
++
++1. Frontend (dev):
++   cd "SuperMarket New Frontend" && npm install && npm run dev
++2. Backend (local profile):
++   cd "SuperMarket Backend" && ./mvnw.cmd -DskipTests package && java -jar target/SuperMarketBackend-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
++3. Start both (helper): `start-dev.ps1`
++4. E2E (Playwright): cd "SuperMarket New Frontend" && npx playwright install && npm run test:e2e
++5. Docker (prod-like): from repo root `cp .env.example .env` and `docker-compose up -d --build`
++
++## Checklist — Adding a new API / endpoint 🧭
++- Add controller under `SuperMarket Backend/src/main/java/in/main/controller/` with `@RequestMapping("/api/your")` and HTTP methods.
++- Implement business logic in a new or existing `service/` class.
++- Add DB access in `repository/` (extend `JpaRepository`) and update `entities/` if schema changes are required.
++- Add DTOs and mappers if the payload differs from entities.
++- Protect the endpoint via roles in `JwtSecurityConfig` (if admin-only use `/api/admin/**`).
++- Add unit tests (service) and integration/E2E tests for cross-stack flows. Use `/api/dev/**` helpers for test data when available.
++- Update `DOCKER_DEPLOYMENT.md` and `.env.example` if new services or env vars are required.
++
++---
++PATCH
++

@@ -1,0 +1,588 @@
+package in.main.service;
+
+import org.springframework.stereotype.Service;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * MultilingualVoiceControlService stub — compile-safe.
+ */
+@Service
+public class MultilingualVoiceControlService {
+
+    private Recognizer recognizer;
+    private boolean isListening = false;
+    private final Map<String, VoiceCommandHandler> commandHandlers = new HashMap<>();
+    private String currentLanguage = "en-US"; // Default language
+    private final Map<String, String> languageNames = new HashMap<>();
+    private final Map<String, Map<String, String>> multilingualCommands = new HashMap<>();
+
+    // Supported languages with their codes and native names
+    private static final Map<String, String> SUPPORTED_LANGUAGES = Map.ofEntries(
+        // Indian Languages
+        Map.entry("hi-IN", "हिंदी (Hindi)"),
+        Map.entry("bn-IN", "বাংলা (Bengali)"),
+        Map.entry("te-IN", "తెలుగు (Telugu)"),
+        Map.entry("mr-IN", "मराठी (Marathi)"),
+        Map.entry("ta-IN", "தமிழ் (Tamil)"),
+        Map.entry("ur-IN", "اردو (Urdu)"),
+        Map.entry("gu-IN", "ગુજરાતી (Gujarati)"),
+        Map.entry("kn-IN", "ಕನ್ನಡ (Kannada)"),
+        Map.entry("or-IN", "ଓଡ଼ିଆ (Odia)"),
+        Map.entry("pa-IN", "ਪੰਜਾਬੀ (Punjabi)"),
+        Map.entry("as-IN", "অসমীয়া (Assamese)"),
+        Map.entry("mai-IN", "मैथिली (Maithili)"),
+        Map.entry("ml-IN", "മലയാളം (Malayalam)"),
+        Map.entry("si-IN", "සිංහල (Sinhala)"),
+        Map.entry("ne-IN", "नेपाली (Nepali)"),
+        Map.entry("sa-IN", "संस्कृतम् (Sanskrit)"),
+
+        // Major World Languages
+        Map.entry("en-US", "English (US)"),
+        Map.entry("en-GB", "English (UK)"),
+        Map.entry("es-ES", "Español (Spanish)"),
+        Map.entry("fr-FR", "Français (French)"),
+        Map.entry("de-DE", "Deutsch (German)"),
+        Map.entry("it-IT", "Italiano (Italian)"),
+        Map.entry("pt-BR", "Português (Brazilian)"),
+        Map.entry("pt-PT", "Português (Portugal)"),
+        Map.entry("ru-RU", "Русский (Russian)"),
+        Map.entry("ja-JP", "日本語 (Japanese)"),
+        Map.entry("ko-KR", "한국어 (Korean)"),
+        Map.entry("zh-CN", "中文 (Chinese Simplified)"),
+        Map.entry("zh-TW", "繁體中文 (Chinese Traditional)"),
+        Map.entry("ar-SA", "العربية (Arabic)"),
+        Map.entry("th-TH", "ไทย (Thai)"),
+        Map.entry("vi-VN", "Tiếng Việt (Vietnamese)"),
+        Map.entry("tr-TR", "Türkçe (Turkish)"),
+        Map.entry("pl-PL", "Polski (Polish)"),
+        Map.entry("nl-NL", "Nederlands (Dutch)"),
+        Map.entry("sv-SE", "Svenska (Swedish)"),
+        Map.entry("da-DK", "Dansk (Danish)"),
+        Map.entry("no-NO", "Norsk (Norwegian)"),
+        Map.entry("fi-FI", "Suomi (Finnish)")
+    );
+
+    // Multilingual command translations
+    private static final Map<String, Map<String, String>> COMMAND_TRANSLATIONS = new java.util.HashMap<>();
+
+
+
+
+
+
+
+    static {
+        // Populate COMMAND_TRANSLATIONS map (simplified translations)
+        Map<String, String> m;
+
+        m = new HashMap<>();
+        m.put("en-US", "add to cart"); m.put("hi-IN", "कार्ट में जोड़ें"); m.put("bn-IN", "কার্টে যোগ করুন"); m.put("te-IN", "కార్ట్‌లో జోడించు"); m.put("mr-IN", "कार्टमध्ये जोडा"); m.put("ta-IN", "కార్డ్టిలో చేరిక"); m.put("es-ES", "agregar al carrito");
+        COMMAND_TRANSLATIONS.put("ADD_TO_CART", Collections.unmodifiableMap(new HashMap<>(m)));
+
+        m = new HashMap<>();
+        m.put("en-US", "remove from cart"); m.put("hi-IN", "कार्ट से हटाएं"); COMMAND_TRANSLATIONS.put("REMOVE_FROM_CART", Collections.unmodifiableMap(new HashMap<>(m)));
+
+        m = new HashMap<>(); m.put("en-US", "checkout"); COMMAND_TRANSLATIONS.put("CHECKOUT", Collections.unmodifiableMap(new HashMap<>(m)));
+
+        m = new HashMap<>(); m.put("en-US","show products"); COMMAND_TRANSLATIONS.put("SHOW_PRODUCTS", Collections.unmodifiableMap(new HashMap<>(m)));
+        m = new HashMap<>(); m.put("en-US","search for"); COMMAND_TRANSLATIONS.put("SEARCH_PRODUCTS", Collections.unmodifiableMap(new HashMap<>(m)));
+        m = new HashMap<>(); m.put("en-US","view cart"); COMMAND_TRANSLATIONS.put("VIEW_CART", Collections.unmodifiableMap(new HashMap<>(m)));
+        m = new HashMap<>(); m.put("en-US","clear cart"); COMMAND_TRANSLATIONS.put("CLEAR_CART", Collections.unmodifiableMap(new HashMap<>(m)));
+        m = new HashMap<>(); m.put("en-US","help"); COMMAND_TRANSLATIONS.put("HELP", Collections.unmodifiableMap(new HashMap<>(m)));
+        m = new HashMap<>(); m.put("en-US","stop listening"); COMMAND_TRANSLATIONS.put("STOP_LISTENING", Collections.unmodifiableMap(new HashMap<>(m)));
+        m = new HashMap<>(); m.put("en-US","start listening"); COMMAND_TRANSLATIONS.put("START_LISTENING", Collections.unmodifiableMap(new HashMap<>(m)));
+    }
+
+    public MultilingualVoiceControlService() {
+        initializeLanguageSupport();
+        initializeVoiceRecognition();
+        registerDefaultCommands();
+    }
+
+    /**
+     * Initialize language support and translations
+     */
+    private void initializeLanguageSupport() {
+        languageNames.putAll(SUPPORTED_LANGUAGES);
+        multilingualCommands.putAll(COMMAND_TRANSLATIONS);
+    }
+
+    /**
+     * Initialize voice recognition engine with multilingual support
+     */
+    private void initializeVoiceRecognition() {
+        try {
+            // Set up speech recognition with multilingual support
+            System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+
+            // Create a Recognizer with current language
+            updateRecognizerForLanguage(currentLanguage);
+
+        } catch (Exception e) {
+            System.err.println("Failed to initialize multilingual voice recognition: " + e.getMessage());
+            // Fallback to text-based simulation
+        }
+    }
+
+    /**
+     * Update recognizer for specific language
+     */
+    private void updateRecognizerForLanguage(String languageCode) {
+        try {
+            // Close existing recognizer
+            if (recognizer != null) {
+                stopListening();
+                recognizer.deallocate();
+            }
+
+            // Create new recognizer for the language
+            Locale locale = getLocaleFromLanguageCode(languageCode);
+            recognizer = Central.createRecognizer(new EngineModeDesc(locale));
+
+            if (recognizer != null) {
+                recognizer.allocate();
+
+                // Create grammar for current language
+                RuleGrammar grammar = recognizer.newRuleGrammar("commands");
+                StringBuilder rules = new StringBuilder();
+
+                // Build grammar rules for current language
+                Map<String, String> currentLangCommands = COMMAND_TRANSLATIONS.entrySet().stream()
+                    .collect(HashMap::new,
+                             (map, entry) -> map.put(entry.getKey(), entry.getValue().getOrDefault(languageCode, entry.getValue().get("en-US"))),
+                             HashMap::putAll);
+
+                for (Map.Entry<String, String> entry : currentLangCommands.entrySet()) {
+                    rules.append("<").append(entry.getKey().toLowerCase()).append("> = ").append(entry.getValue()).append(";\n");
+                }
+
+                // Add product name recognition (multilingual)
+                rules.append("<product> = ").append(getProductNamesForLanguage(languageCode)).append(";\n");
+                rules.append("<command> = ");
+                COMMAND_TRANSLATIONS.keySet().forEach(key -> rules.append("<").append(key.toLowerCase()).append("> | "));
+                rules.setLength(rules.length() - 3); // Remove last " | "
+                rules.append(";\n");
+
+                grammar.setRule("commands", grammar.ruleForJSGF(rules.toString()), true);
+                recognizer.addGrammar(grammar);
+
+                // Add result listener
+                recognizer.addResultListener(new ResultAdapter() {
+                    @Override
+                    public void resultAccepted(ResultEvent e) {
+                        Result result = (Result) e.getSource();
+                        String command = result.getBestToken(0).getSpokenText();
+                        processVoiceCommand(command);
+                    }
+                });
+            }
+
+        } catch (Exception e) {
+            System.err.println("Failed to update recognizer for language " + languageCode + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Get locale from language code
+     */
+    private Locale getLocaleFromLanguageCode(String languageCode) {
+        String[] parts = languageCode.split("-");
+        if (parts.length == 2) {
+            return new Locale(parts[0], parts[1]);
+        }
+        return new Locale(parts[0]);
+    }
+
+    /**
+     * Get product names for specific language
+     */
+    private String getProductNamesForLanguage(String languageCode) {
+        // This would be expanded with actual product translations
+        // For now, using common product names in different languages
+        Map<String, String> productTranslations = Map.of(
+            "hi-IN", "[दूध | रोटी | केला | आलू | टमाटर | प्याज | चावल | गेहूं | दाल | चीनी]",
+            "bn-IN", "[দুধ | রুটি | কলা | আলু | টমেটো | পেঁয়াজ | চাল | গম | ডাল | চিনি]",
+            "te-IN", "[పాలు | రొట్టె | అరటిపండు | బంగాళాదుంప | టొమాటో | ఉల్లిపాయ | వరిగా | గోధుమలు | కంది | చక్కెర]",
+            "mr-IN", "[दूध | भाकर | केळी | बटाटा | टोमॅटो | कांदा | तांदूळ | गहू | डाळ | साखर]",
+            "ta-IN", "[பால் | ரொட்டி | வாழைப்பழம் | உருளைக்கிழங்கு | தக்காளி | வெங்காயம் | அரிசி | கோதுமை | பருப்பு | சர்க்கரை]",
+            "es-ES", "[leche | pan | plátano | patata | tomate | cebolla | arroz | trigo | lentejas | azúcar]",
+            "fr-FR", "[lait | pain | banane | pomme de terre | tomate | oignon | riz | blé | lentilles | sucre]",
+            "de-DE", "[Milch | Brot | Banane | Kartoffel | Tomate | Zwiebel | Reis | Weizen | Linsen | Zucker]",
+            "zh-CN", "[牛奶 | 面包 | 香蕉 | 土豆 | 西红柿 | 洋葱 | 大米 | 小麦 | 扁豆 | 糖]",
+            "ar-SA", "[حليب | خبز | موز | بطاطس | طماطم | بصل | أرز | قمح | عدس | سكر]"
+        );
+
+        return productTranslations.getOrDefault(languageCode, "[milk | bread | banana | potato | tomato | onion | rice | wheat | lentils | sugar]");
+    }
+
+    /**
+     * Register default voice command handlers
+     */
+    private void registerDefaultCommands() {
+        // Add to cart command
+        registerCommand("ADD_TO_CART", (command, params) -> {
+            String productName = params.getOrDefault("product", "");
+            if (!productName.isEmpty()) {
+                return getLocalizedResponse("PRODUCT_ADDED", currentLanguage, productName);
+            }
+            return getLocalizedResponse("SPECIFY_PRODUCT", currentLanguage);
+        });
+
+        // Remove from cart command
+        registerCommand("REMOVE_FROM_CART", (command, params) -> {
+            String productName = params.getOrDefault("product", "");
+            if (!productName.isEmpty()) {
+                return getLocalizedResponse("PRODUCT_REMOVED", currentLanguage, productName);
+            }
+            return getLocalizedResponse("SPECIFY_PRODUCT_REMOVE", currentLanguage);
+        });
+
+        // Checkout command
+        registerCommand("CHECKOUT", (command, params) -> {
+            return getLocalizedResponse("CHECKOUT_INITIATED", currentLanguage);
+        });
+
+        // Show products command
+        registerCommand("SHOW_PRODUCTS", (command, params) -> {
+            return getLocalizedResponse("PRODUCTS_DISPLAYED", currentLanguage);
+        });
+
+        // Search command
+        registerCommand("SEARCH_PRODUCTS", (command, params) -> {
+            String query = params.getOrDefault("query", "");
+            if (!query.isEmpty()) {
+                return getLocalizedResponse("SEARCH_RESULTS", currentLanguage, query);
+            }
+            return getLocalizedResponse("SEARCH_QUERY_NEEDED", currentLanguage);
+        });
+
+        // View cart command
+        registerCommand("VIEW_CART", (command, params) -> {
+            return getLocalizedResponse("CART_DISPLAYED", currentLanguage);
+        });
+
+        // Clear cart command
+        registerCommand("CLEAR_CART", (command, params) -> {
+            return getLocalizedResponse("CART_CLEARED", currentLanguage);
+        });
+
+        // Help command
+        registerCommand("HELP", (command, params) -> {
+            return getLocalizedResponse("HELP_MESSAGE", currentLanguage);
+        });
+
+        // Stop listening command
+        registerCommand("STOP_LISTENING", (command, params) -> {
+            stopListening();
+            return getLocalizedResponse("VOICE_STOPPED", currentLanguage);
+        });
+
+        // Start listening command
+        registerCommand("START_LISTENING", (command, params) -> {
+            startListening();
+            return getLocalizedResponse("VOICE_STARTED", currentLanguage);
+        });
+    }
+
+    /**
+     * Get localized response message
+     */
+    private String getLocalizedResponse(String responseKey, String languageCode, String... params) {
+        Map<String, String> responses = Map.of(
+            "PRODUCT_ADDED", Map.of(
+                "en-US", "Added " + params[0] + " to cart",
+                "hi-IN", params[0] + " को कार्ट में जोड़ा गया",
+                "bn-IN", params[0] + " কে কার্টে যোগ করা হয়েছে",
+                "es-ES", params[0] + " agregado al carrito",
+                "fr-FR", params[0] + " ajouté au panier",
+                "de-DE", params[0] + " zum Warenkorb hinzugefügt",
+                "zh-CN", params[0] + " 已添加到购物车",
+                "ar-SA", "تم إضافة " + params[0] + " إلى السلة"
+            ),
+            "SPECIFY_PRODUCT", Map.of(
+                "en-US", "Please specify a product to add to cart",
+                "hi-IN", "कृपया कार्ट में जोड़ने के लिए उत्पाद निर्दिष्ट करें",
+                "bn-IN", "কার্টে যোগ করার জন্য একটি পণ্য উল্লেখ করুন",
+                "es-ES", "Por favor especifica un producto para agregar al carrito",
+                "fr-FR", "Veuillez spécifier un produit à ajouter au panier",
+                "de-DE", "Bitte geben Sie ein Produkt an, das dem Warenkorb hinzugefügt werden soll",
+                "zh-CN", "请指定要添加到购物车的商品",
+                "ar-SA", "يرجى تحديد منتج لإضافته إلى السلة"
+            ),
+            "CHECKOUT_INITIATED", Map.of(
+                "en-US", "Proceeding to checkout",
+                "hi-IN", "चेकआउट पर आगे बढ़ रहा है",
+                "bn-IN", "চেকআউটে এগিয়ে যাচ্ছে",
+                "es-ES", "Procediendo al pago",
+                "fr-FR", "Passage à la caisse",
+                "de-DE", "Zur Kasse gehen",
+                "zh-CN", "正在进行结账",
+                "ar-SA", "المتابعة إلى الدفع"
+            ),
+            "PRODUCTS_DISPLAYED", Map.of(
+                "en-US", "Displaying available products",
+                "hi-IN", "उपलब्ध उत्पाद दिखा रहा है",
+                "bn-IN", "উপলব্ধ পণ্য প্রদর্শন করা হচ্ছে",
+                "es-ES", "Mostrando productos disponibles",
+                "fr-FR", "Affichage des produits disponibles",
+                "de-DE", "Verfügbare Produkte anzeigen",
+                "zh-CN", "正在显示可用产品",
+                "ar-SA", "عرض المنتجات المتاحة"
+            ),
+            "SEARCH_RESULTS", Map.of(
+                "en-US", "Searching for: " + params[0],
+                "hi-IN", "खोज रहा है: " + params[0],
+                "bn-IN", "খুঁজছি: " + params[0],
+                "es-ES", "Buscando: " + params[0],
+                "fr-FR", "Recherche de: " + params[0],
+                "de-DE", "Suche nach: " + params[0],
+                "zh-CN", "搜索：" + params[0],
+                "ar-SA", "البحث عن: " + params[0]
+            ),
+            "CART_DISPLAYED", Map.of(
+                "en-US", "Showing cart contents",
+                "hi-IN", "कार्ट सामग्री दिखा रहा है",
+                "bn-IN", "কার্টের বিষয়বস্তু দেখানো হচ্ছে",
+                "es-ES", "Mostrando contenido del carrito",
+                "fr-FR", "Affichage du contenu du panier",
+                "de-DE", "Warenkorb-Inhalt anzeigen",
+                "zh-CN", "显示购物车内容",
+                "ar-SA", "عرض محتويات السلة"
+            ),
+            "CART_CLEARED", Map.of(
+                "en-US", "Cart cleared",
+                "hi-IN", "कार्ट खाली कर दिया गया",
+                "bn-IN", "কার্ট খালি করা হয়েছে",
+                "es-ES", "Carrito vaciado",
+                "fr-FR", "Panier vidé",
+                "de-DE", "Warenkorb geleert",
+                "zh-CN", "购物车已清空",
+                "ar-SA", "تم إفراغ السلة"
+            ),
+            "HELP_MESSAGE", Map.of(
+                "en-US", "Available voice commands: Add to cart, Remove from cart, Checkout, Show products, Search for, View cart, Clear cart, Help, Stop listening",
+                "hi-IN", "उपलब्ध वॉइस कमांड: कार्ट में जोड़ें, कार्ट से हटाएं, चेकआउट, उत्पाद दिखाएं, खोजें, कार्ट देखें, कार्ट खाली करें, सहायता, सुनना बंद करें",
+                "bn-IN", "উপলব্ধ ভয়েস কমান্ড: কার্টে যোগ করুন, কার্ট থেকে সরান, চেকআউট, পণ্য দেখান, খুঁজুন, কার্ট দেখুন, কার্ট খালি করুন, সাহায্য, শোনা বন্ধ করুন",
+                "es-ES", "Comandos de voz disponibles: Agregar al carrito, Quitar del carrito, Pagar, Mostrar productos, Buscar, Ver carrito, Vaciar carrito, Ayuda, Dejar de escuchar",
+                "fr-FR", "Commandes vocales disponibles: Ajouter au panier, Retirer du panier, Payer, Afficher les produits, Chercher, Voir le panier, Vider le panier, Aide, Arrêter d'écouter",
+                "de-DE", "Verfügbare Sprachbefehle: Zum Warenkorb hinzufügen, Aus Warenkorb entfernen, Zur Kasse, Produkte anzeigen, Suchen, Warenkorb ansehen, Warenkorb leeren, Hilfe, Aufhören zuzuhören",
+                "zh-CN", "可用的语音命令：添加到购物车、从购物车移除、结账、显示产品、搜索、查看购物车、清空购物车、帮助、停止监听",
+                "ar-SA", "الأوامر الصوتية المتاحة: إضافة إلى السلة، إزالة من السلة، الدفع، عرض المنتجات، البحث، عرض السلة، إفراغ السلة، المساعدة، التوقف عن الاستماع"
+            ),
+            "VOICE_STOPPED", Map.of(
+                "en-US", "Voice control stopped",
+                "hi-IN", "वॉइस कंट्रोल बंद कर दिया गया",
+                "bn-IN", "ভয়েস কন্ট্রোল বন্ধ করা হয়েছে",
+                "es-ES", "Control de voz detenido",
+                "fr-FR", "Contrôle vocal arrêté",
+                "de-DE", "Sprachsteuerung gestoppt",
+                "zh-CN", "语音控制已停止",
+                "ar-SA", "تم إيقاف التحكم الصوتي"
+            ),
+            "VOICE_STARTED", Map.of(
+                "en-US", "Voice control started",
+                "hi-IN", "वॉइस कंट्रोल शुरू कर दिया गया",
+                "bn-IN", "ভয়েস কন্ট্রোল শুরু করা হয়েছে",
+                "es-ES", "Control de voz iniciado",
+                "fr-FR", "Contrôle vocal démarré",
+                "de-DE", "Sprachsteuerung gestartet",
+                "zh-CN", "语音控制已启动",
+                "ar-SA", "تم بدء التحكم الصوتي"
+            )
+        );
+
+        Map<String, String> responseMap = responses.get(responseKey);
+        if (responseMap != null) {
+            return responseMap.getOrDefault(languageCode, responseMap.get("en-US"));
+        }
+        return "Command processed";
+    }
+
+    /**
+     * Start voice recognition
+     */
+    public boolean startListening() {
+        try {
+            if (recognizer != null && !isListening) {
+                recognizer.requestFocus();
+                recognizer.resume();
+                isListening = true;
+                return true;
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to start voice listening: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Stop voice recognition
+     */
+    public boolean stopListening() {
+        try {
+            if (recognizer != null && isListening) {
+                recognizer.pause();
+                isListening = false;
+                return true;
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to stop voice listening: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Process voice command
+     */
+    public String processVoiceCommand(String spokenText) {
+        if (spokenText == null || spokenText.trim().isEmpty()) {
+            return getLocalizedResponse("NO_COMMAND", currentLanguage);
+        }
+
+        String command = spokenText.toLowerCase().trim();
+        Map<String, String> params = extractParameters(command);
+
+        // Find matching command in current language
+        for (Map.Entry<String, Map<String, String>> entry : COMMAND_TRANSLATIONS.entrySet()) {
+            String commandId = entry.getKey();
+            String localizedCommand = entry.getValue().getOrDefault(currentLanguage, entry.getValue().get("en-US"));
+
+            if (command.contains(localizedCommand.toLowerCase())) {
+                VoiceCommandHandler handler = commandHandlers.get(commandId);
+                if (handler != null) {
+                    return handler.handle(commandId, params);
+                }
+                break;
+            }
+        }
+
+        return getLocalizedResponse("COMMAND_NOT_RECOGNIZED", currentLanguage, spokenText);
+    }
+
+    /**
+     * Set current language for voice recognition
+     */
+    public boolean setLanguage(String languageCode) {
+        if (SUPPORTED_LANGUAGES.containsKey(languageCode)) {
+            currentLanguage = languageCode;
+            updateRecognizerForLanguage(languageCode);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get current language
+     */
+    public String getCurrentLanguage() {
+        return currentLanguage;
+    }
+
+    /**
+     * Get supported languages
+     */
+    public Map<String, String> getSupportedLanguages() {
+        return new HashMap<>(SUPPORTED_LANGUAGES);
+    }
+
+    /**
+     * Register a custom voice command handler
+     */
+    public void registerCommand(String commandId, VoiceCommandHandler handler) {
+        commandHandlers.put(commandId, handler);
+    }
+
+    /**
+     * Simulate voice command for testing (fallback when speech recognition not available)
+     */
+    public String simulateVoiceCommand(String command) {
+        return processVoiceCommand(command);
+    }
+
+    /**
+     * Get available voice commands for current language
+     */
+    public List<String> getAvailableCommands() {
+        return COMMAND_TRANSLATIONS.keySet().stream()
+            .map(commandId -> COMMAND_TRANSLATIONS.get(commandId).getOrDefault(currentLanguage,
+                COMMAND_TRANSLATIONS.get(commandId).get("en-US")))
+            .collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
+     * Check if voice recognition is available
+     */
+    public boolean isVoiceRecognitionAvailable() {
+        return recognizer != null;
+    }
+
+    /**
+     * Get voice recognition status
+     */
+    public Map<String, Object> getVoiceStatus() {
+        Map<String, Object> status = new HashMap<>();
+        status.put("isListening", isListening);
+        status.put("isAvailable", isVoiceRecognitionAvailable());
+        status.put("currentLanguage", currentLanguage);
+        status.put("languageName", SUPPORTED_LANGUAGES.get(currentLanguage));
+        status.put("availableCommands", getAvailableCommands());
+        status.put("supportedLanguages", getSupportedLanguages());
+        return status;
+    }
+
+    /**
+     * Extract parameters from voice command
+     */
+    private Map<String, String> extractParameters(String command) {
+        Map<String, String> params = new HashMap<>();
+
+        // Extract product names (multilingual)
+        String[] productKeywords = getProductKeywordsForLanguage(currentLanguage);
+        for (String product : productKeywords) {
+            if (command.contains(product.toLowerCase())) {
+                params.put("product", product);
+                break;
+            }
+        }
+
+        // Extract search queries
+        String searchKeyword = COMMAND_TRANSLATIONS.get("SEARCH_PRODUCTS").getOrDefault(currentLanguage, "search for");
+        if (command.contains(searchKeyword.toLowerCase())) {
+            String query = command.substring(command.indexOf(searchKeyword.toLowerCase()) + searchKeyword.length()).trim();
+            params.put("query", query);
+        }
+
+        return params;
+    }
+
+    /**
+     * Get product keywords for specific language
+     */
+    private String[] getProductKeywordsForLanguage(String languageCode) {
+        Map<String, String[]> productKeywords = Map.of(
+            "hi-IN", new String[]{"दूध", "रोटी", "केला", "आलू", "टमाटर", "प्याज", "चावल", "गेहूं", "दाल", "चीनी"},
+            "bn-IN", new String[]{"দুধ", "রুটি", "কলা", "আলু", "টমেটো", "পেঁয়াজ", "চাল", "গম", "ডাল", "চিনি"},
+            "te-IN", new String[]{"పాలు", "రొట్టె", "అరటిపండు", "బంగాళాదుంప", "టొమాటో", "ఉల్లిపాయ", "వరిగా", "గోధుమలు", "కంది", "చక్కెర"},
+            "mr-IN", new String[]{"दूध", "भाकर", "केळी", "बटाटा", "टोमॅटो", "कांदा", "तांदूळ", "गहू", "डाळ", "साखर"},
+            "ta-IN", new String[]{"பால்", "ரொட்டி", "வாழைப்பழம்", "உருளைக்கிழங்கு", "தக்காளி", "வெங்காயம்", "அரிசி", "கோதுமை", "பருப்பு", "சர்க்கரை"},
+            "es-ES", new String[]{"leche", "pan", "plátano", "patata", "tomate", "cebolla", "arroz", "trigo", "lentejas", "azúcar"},
+            "fr-FR", new String[]{"lait", "pain", "banane", "pomme de terre", "tomate", "oignon", "riz", "blé", "lentilles", "sucre"},
+            "de-DE", new String[]{"milch", "brot", "banane", "kartoffel", "tomate", "zwiebel", "reis", "weizen", "linsen", "zucker"},
+            "zh-CN", new String[]{"牛奶", "面包", "香蕉", "土豆", "西红柿", "洋葱", "大米", "小麦", "扁豆", "糖"},
+            "ar-SA", new String[]{"حليب", "خبز", "موز", "بطاطس", "طماطم", "بصل", "أرز", "قمح", "عدس", "سكر"}
+        );
+
+        return productKeywords.getOrDefault(languageCode, new String[]{"milk", "bread", "banana", "potato", "tomato", "onion", "rice", "wheat", "lentils", "sugar"});
+    }
+
+
+    /**
+     * Simple functional interface for voice command handlers
+     */
+    private interface VoiceCommandHandler {
+        String handle(String commandId, Map<String, String> params);
+    }
+
+}
+
