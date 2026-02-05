@@ -12,6 +12,12 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Allow API base to be injected at build time for Vite
+ARG VITE_API_BASE_URL
+ARG VITE_API_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Build the application for production
 RUN npm run build
 
