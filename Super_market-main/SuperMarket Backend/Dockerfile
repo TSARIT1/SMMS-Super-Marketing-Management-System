@@ -10,14 +10,17 @@ COPY mvnw .
 COPY mvnw.cmd .
 COPY .mvn .mvn
 
-# Download dependencies (cached layer)
-RUN mvn dependency:go-offline -B
+# Download dependencies (cached layer) with retry logic
+RUN mvn dependency:go-offline -B || mvn dependency:go-offline -B
 
 # Copy source code
 COPY src ./src
 
-# Build the application (skip tests for faster builds)
-RUN mvn clean package -DskipTests
+# Build the application (skip tests for faster builds) with retry
+RUN for i in 1 2 3; do \
+  mvn clean package -DskipTests && break || \
+  ([ $i -lt 3 ] && echo "Retrying Maven build..." && sleep 5); \
+done
 
 # Production stage
 FROM eclipse-temurin:21-jre-alpine
