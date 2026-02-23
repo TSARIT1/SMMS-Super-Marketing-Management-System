@@ -20,6 +20,7 @@ import LanguageThemeSelector from "./LanguageThemeSelector";
 import toast from "react-hot-toast";
 import api from "../utils/api";
 import { useTranslation } from "react-i18next";
+import tsarItLogo from "../assets/tsar-it-logo.png";
 
 const Navbar = () => {
   const { pathname } = useLocation();
@@ -261,9 +262,11 @@ const Navbar = () => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center text-white shadow">
-              <Package className="w-5 h-5" />
-            </div>
+            <img 
+              src={tsarItLogo} 
+              alt="TSAR-IT Logo" 
+              className="w-8 h-8 rounded-lg shadow object-contain bg-white"
+            />
             <span className="text-lg sm:text-xl font-bold brand-highlight max-w-[280px] truncate">
               {navBrandText}
             </span>

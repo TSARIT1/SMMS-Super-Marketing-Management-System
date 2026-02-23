@@ -55,9 +55,12 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
     // Count online devices for a user
     long countByUserAndStatus(User user, DeviceStatus status);
 
-    // Find devices by category (using custom query)
-    @Query("SELECT d FROM Device d WHERE d.user = :user AND d.deviceType.category = :category")
-    List<Device> findByUserAndCategory(@Param("user") User user, @Param("category") String category);
+    // Find devices by user and category (enum category is derived from DeviceType)
+    default List<Device> findByUserAndCategory(User user, String category) {
+        return findByUser(user).stream()
+                .filter(d -> d.getDeviceType() != null && category.equals(d.getDeviceType().getCategory()))
+                .toList();
+    }
 
     // Find all default devices for a user
     List<Device> findByUserAndIsDefaultTrue(User user);

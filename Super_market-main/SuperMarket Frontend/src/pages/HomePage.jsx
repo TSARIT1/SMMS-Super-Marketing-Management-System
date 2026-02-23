@@ -18,7 +18,6 @@ import {
   Zap,
   Award,
   Search,
-  Store,
   Package,
   Shield,
   TrendingUp,
@@ -26,8 +25,25 @@ import {
   ChevronRight,
   Play,
   LogIn,
+  Smartphone,
+  Monitor,
+  Download,
+  ArrowRight,
+  Globe,
+  Clock,
+  HeadphonesIcon,
+  Sparkles,
+  Building2,
+  LineChart,
+  ShoppingCart,
+  Settings,
+  Lock,
+  Layers,
+  ChevronDown,
+  ExternalLink,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import tsarItLogo from "../assets/tsar-it-logo.png";
 
 const HERO_IMAGE =
   "https://s3-alpha.figma.com/hub/file/5756596760/4a94ee92-e636-45d7-bdc2-ee4161a55553-cover.png";
@@ -47,9 +63,11 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
-              <Store className="text-white" size={24} />
-            </div>
+            <img 
+              src={tsarItLogo} 
+              alt="TSAR-IT Logo" 
+              className="w-12 h-12 rounded-xl shadow-lg object-contain bg-white"
+            />
             <div>
               <div className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 TSAR IT SMMS
@@ -61,7 +79,7 @@ function Navbar() {
           </div>
         </div>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
           <a href="#main" className="hover:text-indigo-600 transition-colors">
             Home
           </a>
@@ -81,10 +99,11 @@ function Navbar() {
             Pricing
           </a>
           <a
-            href="#testimonials"
-            className="hover:text-indigo-600 transition-colors"
+            href="#download"
+            className="hover:text-indigo-600 transition-colors flex items-center gap-1"
           >
-            Testimonials
+            Download
+            <Download size={14} />
           </a>
           <a
             href="#contact"
@@ -94,9 +113,9 @@ function Navbar() {
           </a>
           <button
             onClick={() => navigate("/login")}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-xl"
+            className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
           >
-            <LogIn size={20} />
+            <LogIn size={18} />
             Login
           </button>
         </nav>
@@ -113,21 +132,35 @@ function Navbar() {
         {open && (
           <div className="absolute left-0 right-0 top-full bg-white border-t shadow-lg md:hidden">
             <div className="px-4 py-6 space-y-4">
-              <a href="#main" className="block py-2 hover:text-indigo-600">
+              <a href="#main" className="block py-2 hover:text-indigo-600" onClick={() => setOpen(false)}>
                 Home
               </a>
-              <a href="#about" className="block py-2 hover:text-indigo-600">
+              <a href="#about" className="block py-2 hover:text-indigo-600" onClick={() => setOpen(false)}>
                 About
               </a>
-              <a href="#features" className="block py-2 hover:text-indigo-600">
+              <a href="#features" className="block py-2 hover:text-indigo-600" onClick={() => setOpen(false)}>
                 Features
               </a>
-              <a href="#pricing" className="block py-2 hover:text-indigo-600">
+              <a href="#pricing" className="block py-2 hover:text-indigo-600" onClick={() => setOpen(false)}>
                 Pricing
               </a>
-              <a href="#contact" className="block py-2 hover:text-indigo-600">
+              <a href="#download" className="block py-2 hover:text-indigo-600 flex items-center gap-2" onClick={() => setOpen(false)}>
+                Download
+                <Download size={14} />
+              </a>
+              <a href="#contact" className="block py-2 hover:text-indigo-600" onClick={() => setOpen(false)}>
                 Contact
               </a>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  navigate("/login");
+                }}
+                className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2.5 rounded-xl font-semibold w-full justify-center mt-4"
+              >
+                <LogIn size={18} />
+                Login
+              </button>
             </div>
           </div>
         )}
@@ -926,6 +959,220 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Download Apps Section */}
+        <section id="download" className="py-24 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 relative overflow-hidden">
+          {/* Background decorations */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-5 relative z-10">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-indigo-300 text-sm font-medium border border-white/10 mb-6">
+                <Download size={16} className="text-indigo-400" />
+                Available on All Platforms
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                Download TSAR IT SMMS
+              </h2>
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+                Take your retail management on the go. Our apps are available for Android, iOS, and Desktop platforms.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {/* Android App */}
+              <div className="group bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 hover:border-green-500/50 hover:bg-white/10 transition-all duration-500">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-green-500/30">
+                    <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.523 15.341c-.5 0-.913.379-.913.913v5.42c0 .534.413.913.913.913.534 0 .914-.379.914-.914v-5.419c0-.534-.38-.913-.914-.913zm-11.046 0c-.5 0-.913.379-.913.913v5.42c0 .534.413.913.913.913.534 0 .914-.379.914-.914v-5.419c0-.534-.38-.913-.914-.913zm8.728-4.898l1.29-2.35c.086-.138.052-.31-.069-.379-.137-.086-.31-.052-.379.069l-1.308 2.385c-1.033-.465-2.19-.724-3.416-.724-1.227 0-2.383.26-3.416.724l-1.308-2.385c-.069-.121-.242-.155-.379-.069-.121.069-.155.241-.069.379l1.29 2.35c-2.276 1.224-3.811 3.5-3.931 6.155h15.626c-.12-2.655-1.655-4.931-3.931-6.155zm-6.205 3.897c-.431 0-.776-.345-.776-.776s.345-.776.776-.776.776.345.776.776-.345.776-.776.776zm4 0c-.431 0-.776-.345-.776-.776s.345-.776.776-.776.776.345.776.776-.345.776-.776.776zm-9.931 1.001c-.5 0-.913.379-.913.913v5.42c0 .534.413.913.913.913.534 0 .914-.379.914-.914v-5.419c0-.534-.38-.913-.914-.913zm11.046 0c-.5 0-.913.379-.913.913v5.42c0 .534.413.913.913.913.534 0 .914-.379.914-.914v-5.419c0-.534-.38-.913-.914-.913z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Android App</h3>
+                  <p className="text-gray-400 text-sm mb-6">
+                    Available on Android 6.0 and above
+                  </p>
+                  <div className="space-y-3 w-full">
+                    <a 
+                      href="https://play.google.com/store/apps/details?id=com.tsarit.smms" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3.5 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-green-500/30"
+                    >
+                      <Download size={20} />
+                      Google Play Store
+                    </a>
+                    <a 
+                      href="#" 
+                      className="flex items-center justify-center gap-3 w-full bg-white/10 text-white px-6 py-3.5 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20"
+                    >
+                      <ExternalLink size={18} />
+                      Direct APK Download
+                    </a>
+                  </div>
+                  <div className="mt-6 flex items-center gap-2 text-gray-400 text-sm">
+                    <Star className="text-yellow-400 fill-current" size={14} />
+                    <span>4.8 Rating</span>
+                    <span className="mx-2">•</span>
+                    <span>50K+ Downloads</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* iOS App */}
+              <div className="group bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 hover:border-blue-500/50 hover:bg-white/10 transition-all duration-500 md:scale-105 md:-mt-4 md:mb-4">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                    Most Popular
+                  </span>
+                </div>
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/30">
+                    <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">iOS App</h3>
+                  <p className="text-gray-400 text-sm mb-6">
+                    Available on iOS 13.0 and above
+                  </p>
+                  <div className="space-y-3 w-full">
+                    <a 
+                      href="https://apps.apple.com/app/tsar-it-smms" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3.5 rounded-xl font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30"
+                    >
+                      <Download size={20} />
+                      Apple App Store
+                    </a>
+                    <a 
+                      href="#" 
+                      className="flex items-center justify-center gap-3 w-full bg-white/10 text-white px-6 py-3.5 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20"
+                    >
+                      <ExternalLink size={18} />
+                      TestFlight Beta
+                    </a>
+                  </div>
+                  <div className="mt-6 flex items-center gap-2 text-gray-400 text-sm">
+                    <Star className="text-yellow-400 fill-current" size={14} />
+                    <span>4.9 Rating</span>
+                    <span className="mx-2">•</span>
+                    <span>25K+ Downloads</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop App */}
+              <div className="group bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-500">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/30">
+                    <Monitor size={40} className="text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Desktop App</h3>
+                  <p className="text-gray-400 text-sm mb-6">
+                    Windows, macOS & Linux
+                  </p>
+                  <div className="space-y-3 w-full">
+                    <a 
+                      href="#" 
+                      className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white px-6 py-3.5 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30"
+                    >
+                      <Download size={20} />
+                      Windows (.exe)
+                    </a>
+                    <div className="grid grid-cols-2 gap-3">
+                      <a 
+                        href="#" 
+                        className="flex items-center justify-center gap-2 bg-white/10 text-white px-4 py-3 rounded-xl font-medium hover:bg-white/20 transition-all duration-300 border border-white/20 text-sm"
+                      >
+                        <Download size={16} />
+                        macOS
+                      </a>
+                      <a 
+                        href="#" 
+                        className="flex items-center justify-center gap-2 bg-white/10 text-white px-4 py-3 rounded-xl font-medium hover:bg-white/20 transition-all duration-300 border border-white/20 text-sm"
+                      >
+                        <Download size={16} />
+                        Linux
+                      </a>
+                    </div>
+                  </div>
+                  <div className="mt-6 flex items-center gap-2 text-gray-400 text-sm">
+                    <Lock size={14} />
+                    <span>Secure & Offline Ready</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Info */}
+            <div className="mt-16 grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div className="flex items-center gap-3 bg-white/5 rounded-xl p-4 border border-white/10">
+                <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                  <CheckCircle2 size={20} className="text-green-400" />
+                </div>
+                <div className="text-left">
+                  <div className="text-white font-semibold text-sm">Auto Sync</div>
+                  <div className="text-gray-400 text-xs">Cloud backup</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 bg-white/5 rounded-xl p-4 border border-white/10">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                  <Shield size={20} className="text-blue-400" />
+                </div>
+                <div className="text-left">
+                  <div className="text-white font-semibold text-sm">Secure</div>
+                  <div className="text-gray-400 text-xs">End-to-end encryption</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 bg-white/5 rounded-xl p-4 border border-white/10">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                  <Zap size={20} className="text-purple-400" />
+                </div>
+                <div className="text-left">
+                  <div className="text-white font-semibold text-sm">Fast</div>
+                  <div className="text-gray-400 text-xs">Optimized performance</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 bg-white/5 rounded-xl p-4 border border-white/10">
+                <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                  <HeadphonesIcon size={20} className="text-orange-400" />
+                </div>
+                <div className="text-left">
+                  <div className="text-white font-semibold text-sm">24/7 Support</div>
+                  <div className="text-gray-400 text-xs">Always available</div>
+                </div>
+              </div>
+            </div>
+
+            {/* QR Code Section */}
+            <div className="mt-16 text-center">
+              <p className="text-gray-400 text-sm mb-4">Or scan to download on mobile</p>
+              <div className="inline-flex items-center gap-4 bg-white rounded-2xl p-4 shadow-2xl">
+                <div className="w-24 h-24 bg-gray-100 rounded-xl flex items-center justify-center">
+                  <div className="grid grid-cols-5 gap-0.5">
+                    {Array.from({ length: 25 }).map((_, i) => (
+                      <div 
+                        key={i} 
+                        className={`w-4 h-4 rounded-sm ${Math.random() > 0.5 ? 'bg-gray-800' : 'bg-white'}`}
+                      ></div>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-left">
+                  <div className="text-gray-800 font-bold">TSAR IT SMMS</div>
+                  <div className="text-gray-500 text-sm">Scan with your phone</div>
+                  <div className="text-indigo-600 text-xs mt-1">Play Store • App Store</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section id="contact" className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-start">
             <div>
@@ -1087,9 +1334,11 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-5 grid md:grid-cols-5 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
-                  <Store className="text-white" size={24} />
-                </div>
+                <img 
+                  src={tsarItLogo} 
+                  alt="TSAR-IT Logo" 
+                  className="w-12 h-12 rounded-xl shadow-lg object-contain bg-white"
+                />
                 <div>
                   <div className="font-bold text-xl">TSAR-IT</div>
                   <div className="text-xs text-gray-400">

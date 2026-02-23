@@ -17,6 +17,7 @@ import {
   Target,
   Brain,
 } from "lucide-react";
+import tsarItLogo from "../assets/tsar-it-logo.png";
 
 const SuperAdminLayout = ({ children }) => {
   const navigate = useNavigate();
@@ -53,13 +54,13 @@ const SuperAdminLayout = ({ children }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <Shield
-                className="text-indigo-600"
-                size={24}
-                aria-hidden="true"
+              <img 
+                src={tsarItLogo} 
+                alt="TSAR-IT Logo" 
+                className="w-8 h-8 rounded-lg shadow object-contain bg-white"
               />
               <span className="text-lg font-bold text-gray-800">
-                SMMS Admin
+                TSAR-IT SMMS Admin
               </span>
             </div>
             <h1 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">
