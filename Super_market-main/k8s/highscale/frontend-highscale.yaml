@@ -1,0 +1,453 @@
+# ============================================
+# Frontend Deployment for 10M Users
+# CDN-Ready with SEO Optimization
+# ============================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: supermarket
+  labels:
+    app: frontend
+    tier: web
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        tier: web
+    spec:
+      containers:
+        - name: nginx
+          image: supermarket-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 5"]
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: frontend-nginx-config
+        - name: nginx-cache
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - frontend
+                topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-nginx-config
+  namespace: supermarket
+data:
+  nginx.conf: |
+    # Ultra High Performance Nginx Configuration for 10M Users
+    # Optimized for 60ms response time and Google SEO
+    
+    worker_processes auto;
+    worker_rlimit_nofile 100000;
+    worker_cpu_affinity auto;
+    
+    error_log /var/log/nginx/error.log warn;
+    pid /var/run/nginx.pid;
+    
+    events {
+        worker_connections 65535;
+        multi_accept on;
+        use epoll;
+        accept_mutex off;
+    }
+    
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+    
+        # Performance optimizations
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        keepalive_requests 100000;
+        reset_timedout_connection on;
+        server_tokens off;
+    
+        # Buffer settings for high traffic
+        client_body_buffer_size 32K;
+        client_header_buffer_size 2k;
+        client_max_body_size 50M;
+        large_client_header_buffers 4 16k;
+        client_body_timeout 30;
+        client_header_timeout 30;
+        send_timeout 30;
+    
+        # Logging format with performance metrics
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for" '
+                        'rt=$request_time uct="$upstream_connect_time" '
+                        'uht="$upstream_header_time" urt="$upstream_response_time" '
+                        'cache_status="$upstream_cache_status"';
+    
+        access_log /var/log/nginx/access.log main buffer=64k flush=5s;
+    
+        # Gzip compression - Ultra performance
+        gzip on;
+        gzip_vary on;
+        gzip_proxied any;
+        gzip_comp_level 6;
+        gzip_min_length 256;
+        gzip_buffers 16 16k;
+        gzip_http_version 1.1;
+        gzip_types
+            application/atom+xml
+            application/geo+json
+            application/javascript
+            application/x-javascript
+            application/json
+            application/ld+json
+            application/manifest+json
+            application/rdf+xml
+            application/rss+xml
+            application/vnd.ms-fontobject
+            application/wasm
+            application/x-web-app-manifest+json
+            application/xhtml+xml
+            application/xml
+            font/eot
+            font/otf
+            font/ttf
+            image/bmp
+            image/svg+xml
+            text/cache-manifest
+            text/calendar
+            text/css
+            text/javascript
+            text/markdown
+            text/plain
+            text/xml
+            text/vcard
+            text/vnd.rim.location.xloc
+            text/vtt
+            text/x-component
+            text/x-cross-domain-policy;
+    
+        # Brotli compression (if module available)
+        brotli on;
+        brotli_comp_level 6;
+        brotli_types text/plain text/css application/javascript application/json application/xml image/svg+xml;
+    
+        # Rate limiting zones
+        limit_req_zone $binary_remote_addr zone=api:100m rate=1000r/s;
+        limit_req_zone $binary_remote_addr zone=general:100m rate=500r/s;
+        limit_req_zone $binary_remote_addr zone=login:100m rate=20r/m;
+        limit_conn_zone $binary_remote_addr zone=conn_limit:100m;
+    
+        # Proxy cache configuration
+        proxy_cache_path /var/cache/nginx/proxy levels=2:2 keys_zone=api_cache:500m max_size=5g inactive=60m use_temp_path=off;
+        proxy_cache_path /var/cache/nginx/static levels=2:2 keys_zone=static_cache:500m max_size=2g inactive=365d use_temp_path=off;
+    
+        # Open file cache
+        open_file_cache max=100000 inactive=60s;
+        open_file_cache_valid 120s;
+        open_file_cache_min_uses 2;
+        open_file_cache_errors on;
+    
+        # Upstream backends with load balancing
+        upstream backend_cluster {
+            least_conn;
+            server backend-service:8080 weight=5 max_fails=3 fail_timeout=30s;
+            keepalive 64;
+        }
+    
+        # Map for caching based on content type
+        map $sent_http_content_type $expires {
+            default                    off;
+            text/html                  epoch;
+            text/css                   1y;
+            application/javascript     1y;
+            ~image/                    1y;
+            ~font/                     1y;
+        }
+    
+        # Map for cache bypass
+        map $http_cookie $no_cache {
+            default 0;
+            ~session 1;
+            ~token 1;
+        }
+    
+        server {
+            listen 80;
+            server_name localhost;
+            root /usr/share/nginx/html;
+            index index.html;
+    
+            # Security headers for SEO and Security
+            add_header X-Frame-Options "SAMEORIGIN" always;
+            add_header X-Content-Type-Options "nosniff" always;
+            add_header X-XSS-Protection "1; mode=block" always;
+            add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+            add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    
+            # HSTS for HTTPS (SEO ranking factor)
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    
+            # Content Security Policy
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://api.supermarket.com https://checkout.razorpay.com https://www.google-analytics.com; frame-src https://api.sandbox.razorpay.com https://api.razorpay.com;" always;
+    
+            # Cache control with expires
+            expires $expires;
+    
+            # Preload headers for faster rendering
+            add_header Link '</assets/js/vendor-react.js>; rel=preload; as=script' always;
+            add_header Link '</assets/css/main.css>; rel=preload; as=style' always;
+    
+            # Static assets with aggressive caching (SEO performance)
+            location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp|avif)$ {
+                expires 1y;
+                add_header Cache-Control "public, immutable";
+                add_header X-Content-Type-Options "nosniff";
+                access_log off;
+    
+                # Enable stale cache
+                proxy_cache_valid 200 302 365d;
+                proxy_cache_valid 404 1m;
+            }
+    
+            # API proxy with rate limiting and load balancing
+            location /api {
+                limit_req zone=api burst=500 nodelay;
+                limit_conn conn_limit 100;
+    
+                proxy_pass http://backend_cluster;
+                proxy_http_version 1.1;
+    
+                # Connection pooling
+                proxy_set_header Connection "";
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+    
+                # Timeouts optimized for 60ms response
+                proxy_connect_timeout 3s;
+                proxy_send_timeout 10s;
+                proxy_read_timeout 10s;
+    
+                # Buffer settings
+                proxy_buffering on;
+                proxy_buffer_size 8k;
+                proxy_buffers 16 8k;
+                proxy_busy_buffers_size 16k;
+    
+                # Cache API responses (for GET requests)
+                proxy_cache api_cache;
+                proxy_cache_methods GET;
+                proxy_cache_valid 200 2m;
+                proxy_cache_valid 404 30s;
+                proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+                proxy_cache_lock on;
+                proxy_cache_key $scheme$request_method$host$request_uri;
+                add_header X-Cache-Status $upstream_cache_status;
+            }
+    
+            # Login rate limiting
+            location /api/auth/login {
+                limit_req zone=login burst=10 nodelay;
+                limit_conn conn_limit 20;
+    
+                proxy_pass http://backend_cluster;
+                proxy_http_version 1.1;
+                proxy_set_header Connection "";
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+    
+            # Health check endpoint
+            location /health {
+                access_log off;
+                return 200 "healthy\n";
+                add_header Content-Type text/plain;
+            }
+    
+            # Robots.txt for SEO
+            location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+            }
+    
+            # Sitemap for SEO
+            location = /sitemap.xml {
+                allow all;
+                log_not_found off;
+                access_log off;
+                add_header Content-Type application/xml;
+            }
+    
+            # Manifest for PWA
+            location = /manifest.json {
+                allow all;
+                log_not_found off;
+                access_log off;
+                add_header Content-Type application/manifest+json;
+            }
+    
+            # Service worker
+            location = /sw.js {
+                add_header Cache-Control "no-cache, no-store, must-revalidate";
+                proxy_cache_bypass $http_pragma;
+                proxy_cache_revalidate on;
+                expires off;
+                access_log off;
+            }
+    
+            # React Router - serve index.html for all routes
+            location / {
+                limit_req zone=general burst=200 nodelay;
+    
+                try_files $uri $uri/ /index.html;
+    
+                # No caching for index.html
+                location = /index.html {
+                    add_header Cache-Control "no-cache, no-store, must-revalidate";
+                    add_header Pragma "no-cache";
+                    add_header Expires "0";
+                }
+            }
+    
+            # Error pages
+            error_page 404 /index.html;
+            error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+                root /usr/share/nginx/html;
+            }
+        }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: supermarket
+  labels:
+    app: frontend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http
+  selector:
+    app: frontend
+---
+# Horizontal Pod Autoscaler for Frontend
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
+  namespace: supermarket
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 5
+  maxReplicas: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 10
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+        - type: Pods
+          value: 5
+          periodSeconds: 15
+      selectPolicy: Max
+---
+# Pod Disruption Budget
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: frontend-pdb
+  namespace: supermarket
+spec:
+  minAvailable: 80%
+  selector:
+    matchLabels:
+      app: frontend

@@ -30,7 +30,6 @@ public class DevSeedIntegrationTest {
             .uri(URI.create(seedUrl))
             .timeout(Duration.ofSeconds(10))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Basic " + basicAuth)
             .POST(HttpRequest.BodyPublishers.ofString("{\"users\":3}"))
             .build();
         HttpResponse<String> seedRes = http.send(seedReq, HttpResponse.BodyHandlers.ofString());

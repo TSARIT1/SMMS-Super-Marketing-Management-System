@@ -15,14 +15,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(subscriptionInterceptor)
                 .addPathPatterns(
-                    "/api/orders/**",
-                    "/api/admin/inventory/**",
                     "/api/admin/inventory",
+                    "/api/admin/inventory/**",
                     "/api/notifications/**",
                     "/api/analytics/**",
-                    "/api/shop/products/**",
                     "/api/products/**"
                 )
-                .excludePathPatterns("/api/subscription/**", "/api/subscription-plans/**", "/api/admin/**");
+                .excludePathPatterns(
+                    "/api/orders",
+                    "/api/orders/**",
+                    "/api/subscription/**", 
+                    "/api/subscription-plans/**", 
+                    "/api/admin/**",
+                    "/api/shop/products",
+                    "/api/shop/products/**"
+                );
     }
 }

@@ -1,0 +1,42 @@
+name: CI - Frontend & Backend
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        java-version: [17]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install & build frontend
+        working-directory: "SuperMarket New Frontend"
+        run: |
+          npm ci
+          npm run build --if-present
+          npm test --if-present
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+
+      - name: Run backend tests
+        working-directory: "SuperMarket Backend"
+        run: |
+          chmod +x mvnw || true
+          ./mvnw -B clean test

@@ -5,7 +5,9 @@ import java.util.List;
 public class OrderRequest {
 
     private String customerName;
+    private String customerPhone;
     private double totalAmount;
+    private double taxAmount;
     private String paymentMethod;
     private List<OrderItemRequest> items;
 
@@ -39,6 +41,22 @@ public class OrderRequest {
 
     public List<OrderItemRequest> getItems() {
         return items;
+    }
+
+    public String getCustomerPhone() {
+        return customerPhone;
+    }
+
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
+    }
+
+    public double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(double taxAmount) {
+        this.taxAmount = taxAmount;
     }
 }
 

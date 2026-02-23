@@ -1,13 +1,14 @@
 package in.main.config;
 
-import in.main.service.SubscriptionService;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import in.main.service.SubscriptionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Component
 public class SubscriptionInterceptor implements HandlerInterceptor {
@@ -16,10 +17,17 @@ public class SubscriptionInterceptor implements HandlerInterceptor {
     private SubscriptionService subscriptionService;
 
     private Long resolveUserId(HttpServletRequest req) {
+        // 1. Check query parameter (e.g., ?userId=6)
+        String param = req.getParameter("userId");
+        if (param != null && !param.isBlank()) {
+            try { return Long.valueOf(param); } catch (Exception ignored) {}
+        }
+        // 2. Check custom header
         String header = req.getHeader("userId");
         if (header != null && !header.isBlank()) {
             try { return Long.valueOf(header); } catch (Exception ignored) {}
         }
+        // 3. Check JWT SecurityContext
         try {
             var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
             if (auth != null) {

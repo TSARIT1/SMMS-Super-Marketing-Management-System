@@ -82,7 +82,7 @@ services:
   # React Frontend with Nginx
   frontend:
     build:
-      context: ./SuperMarket New Frontend
+      context: ./SuperMarket Frontend
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}

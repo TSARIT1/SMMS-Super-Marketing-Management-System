@@ -11,6 +11,14 @@ public class SubscriptionResponse {
     private Double amountPaid;
     private int daysRemaining;
 
+    // Plan details from subscription_plans table
+    private String planName;
+    private String description;
+    private int maxProducts;
+    private int maxUsers;
+    private double price;
+    private int durationDays;
+
     public Long getId() {
         return id;
     }
@@ -81,5 +89,53 @@ public class SubscriptionResponse {
 
     public void setDaysRemaining(int daysRemaining) {
         this.daysRemaining = daysRemaining;
+    }
+
+    public String getPlanName() {
+        return planName;
+    }
+
+    public void setPlanName(String planName) {
+        this.planName = planName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getMaxProducts() {
+        return maxProducts;
+    }
+
+    public void setMaxProducts(int maxProducts) {
+        this.maxProducts = maxProducts;
+    }
+
+    public int getMaxUsers() {
+        return maxUsers;
+    }
+
+    public void setMaxUsers(int maxUsers) {
+        this.maxUsers = maxUsers;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getDurationDays() {
+        return durationDays;
+    }
+
+    public void setDurationDays(int durationDays) {
+        this.durationDays = durationDays;
     }
 }

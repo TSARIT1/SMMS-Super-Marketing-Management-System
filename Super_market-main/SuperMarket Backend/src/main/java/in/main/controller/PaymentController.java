@@ -34,7 +34,7 @@ import in.main.service.payment.RazorpayService;
 
 @RestController
 @RequestMapping("/api/payment")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:8081", "http://localhost:8082"}, allowCredentials = "true")
 public class PaymentController {
 
     @Autowired

@@ -92,4 +92,133 @@ public class EmailTemplate {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    // Explicit Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public EmailType getEmailType() {
+        return emailType;
+    }
+
+    public void setEmailType(EmailType emailType) {
+        this.emailType = emailType;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public TemplateStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TemplateStatus status) {
+        this.status = status;
+    }
+
+    public Boolean getIsAiGenerated() {
+        return isAiGenerated;
+    }
+
+    public void setIsAiGenerated(Boolean isAiGenerated) {
+        this.isAiGenerated = isAiGenerated;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Boolean getIsHtml() {
+        return isHtml;
+    }
+
+    public void setIsHtml(Boolean isHtml) {
+        this.isHtml = isHtml;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getAvailableVariables() {
+        return availableVariables;
+    }
+
+    public void setAvailableVariables(String availableVariables) {
+        this.availableVariables = availableVariables;
+    }
 }

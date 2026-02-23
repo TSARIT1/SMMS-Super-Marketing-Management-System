@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import in.main.dto.ProfileRequest;
@@ -15,6 +17,7 @@ import in.main.entities.User;
 import in.main.repository.ProductRepository;
 import in.main.repository.ProfileRepository;
 import in.main.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -29,9 +32,16 @@ public class ProfileServiceImpl implements ProfileService {
     private FileStorageService fileStorageService;
     @Autowired
     private ProductRepository productRepository;
+    
+    @Autowired
+    private HttpServletRequest request;
+    
+    @Value("${app.base.url:}")
+    private String appBaseUrl;
 
     // ================= GET PROFILE =================
     @Override
+    @Transactional
     public ProfileResponse getProfile(String email) {
 
         User user = userRepository.findByEmail(email)
@@ -58,6 +68,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     // ================= UPDATE PROFILE =================
     @Override
+    @Transactional
     public ProfileResponse updateProfile(
             User user,
             ProfileRequest request,
@@ -76,64 +87,128 @@ public class ProfileServiceImpl implements ProfileService {
                 });
 
         // ===== BASIC DETAILS =====
-        profile.setShopName(request.getShop_name());
-        profile.setShopType(request.getShop_type());
-        profile.setTagline(request.getTagline());
-        profile.setEstablishedYear(request.getEstablished_year());
-
-        profile.setShopAddress(request.getShop_address());
-        profile.setPhoneNumber(request.getPhone_number());
-        profile.setEmail(request.getEmail());
-        profile.setWebsite(request.getWebsite());
-
-        profile.setOpeningTime(request.getOpening_time());
-        profile.setClosingTime(request.getClosing_time());
-        profile.setWorkingDays(request.getWorking_days());
-
-        // ===== BOOLEAN FLAGS =====
-        profile.setDeliveryAvailable(request.isDeliveryAvailable());
-        profile.setHomeDelivery(request.isHomeDelivery());
-        profile.setParkingAvailable(request.isParkingAvailable());
-        profile.setAcceptsOnlineOrders(request.isAcceptsOnlineOrders());
-
-        // ===== BANK DETAILS =====
-        profile.setBankAccountName(request.getBank_account_name());
-        profile.setBankAccountNumber(request.getBank_account_number());
-        profile.setBankName(request.getBank_name());
-        profile.setIfscCode(request.getIfsc_code());
-        profile.setUpiId(request.getUpi_id());
-
-        // ===== TAX DETAILS =====
-        profile.setGstNumber(request.getGst_number());
-        profile.setTinNumber(request.getTin_number());
-        profile.setPanNumber(request.getPan_number());
-        profile.setCinNumber(request.getCin_number());
-
-        profile.setDiscountOffers(request.getDiscount_offers());
-
-        // ===== LIST FIELDS =====
-        // Parse accepted_payment_methods
-        if (request.getAccepted_payment_methods() != null && !request.getAccepted_payment_methods().isEmpty()) {
-            profile.setAcceptedPaymentMethods(request.getAccepted_payment_methods());
-        } else {
-            profile.setAcceptedPaymentMethods(new ArrayList<>());
+        if (request.getShop_name() != null) {
+            profile.setShopName(request.getShop_name());
+        }
+        if (request.getShop_type() != null) {
+            profile.setShopType(request.getShop_type());
+        }
+        if (request.getTagline() != null) {
+            profile.setTagline(request.getTagline());
+        }
+        if (request.getEstablished_year() != null) {
+            profile.setEstablishedYear(request.getEstablished_year());
         }
 
-        // Parse product_categories  
-        if (request.getProduct_categories() != null && !request.getProduct_categories().isEmpty()) {
+        if (request.getShop_address() != null) {
+            profile.setShopAddress(request.getShop_address());
+        }
+        if (request.getPhone_number() != null) {
+            profile.setPhoneNumber(request.getPhone_number());
+        }
+        if (request.getEmail() != null) {
+            profile.setEmail(request.getEmail());
+        }
+        if (request.getWebsite() != null) {
+            profile.setWebsite(request.getWebsite());
+        }
+
+        if (request.getOpening_time() != null) {
+            profile.setOpeningTime(request.getOpening_time());
+        }
+        if (request.getClosing_time() != null) {
+            profile.setClosingTime(request.getClosing_time());
+        }
+        if (request.getWorking_days() != null) {
+            profile.setWorkingDays(request.getWorking_days());
+        }
+
+        // ===== BOOLEAN FLAGS =====
+        if (request.getDeliveryAvailable() != null) {
+            profile.setDeliveryAvailable(request.getDeliveryAvailable());
+        }
+        if (request.getHomeDelivery() != null) {
+            profile.setHomeDelivery(request.getHomeDelivery());
+        }
+        if (request.getParkingAvailable() != null) {
+            profile.setParkingAvailable(request.getParkingAvailable());
+        }
+        if (request.getAcceptsOnlineOrders() != null) {
+            profile.setAcceptsOnlineOrders(request.getAcceptsOnlineOrders());
+        }
+
+        // ===== BANK DETAILS =====
+        if (request.getBank_account_name() != null) {
+            profile.setBankAccountName(request.getBank_account_name());
+        }
+        if (request.getBank_account_number() != null) {
+            profile.setBankAccountNumber(request.getBank_account_number());
+        }
+        if (request.getBank_name() != null) {
+            profile.setBankName(request.getBank_name());
+        }
+        if (request.getIfsc_code() != null) {
+            profile.setIfscCode(request.getIfsc_code());
+        }
+        if (request.getUpi_id() != null) {
+            profile.setUpiId(request.getUpi_id());
+        }
+
+        // ===== TAX DETAILS =====
+        if (request.getGst_number() != null) {
+            profile.setGstNumber(request.getGst_number());
+        }
+        if (request.getTin_number() != null) {
+            profile.setTinNumber(request.getTin_number());
+        }
+        if (request.getPan_number() != null) {
+            profile.setPanNumber(request.getPan_number());
+        }
+        if (request.getCin_number() != null) {
+            profile.setCinNumber(request.getCin_number());
+        }
+
+        if (request.getDiscount_offers() != null) {
+            profile.setDiscountOffers(request.getDiscount_offers());
+        }
+        
+        // ===== LOYALTY AND DISCOUNT CONFIGURATION =====
+        if (request.getLoyalty_points_enabled() != null) {
+            profile.setLoyaltyPointsEnabled(request.getLoyalty_points_enabled());
+        }
+        if (request.getLoyalty_points_rate() != null) {
+            profile.setLoyaltyPointsRate(request.getLoyalty_points_rate());
+        }
+        if (request.getReferral_discount() != null) {
+            profile.setReferralDiscount(request.getReferral_discount());
+        }
+
+        // ===== LIST FIELDS =====
+        if (request.getAccepted_payment_methods() != null) {
+            profile.setAcceptedPaymentMethods(request.getAccepted_payment_methods());
+        }
+        if (request.getProduct_categories() != null) {
             profile.setProductCategories(request.getProduct_categories());
-        } else {
-            profile.setProductCategories(new ArrayList<>());
         }
 
         // ===== SOCIAL =====
-        profile.setFacebook(request.getFacebook());
-        profile.setInstagram(request.getInstagram());
-        profile.setGoogleBusinessRating(request.getGoogle_business_rating());
+        if (request.getFacebook() != null) {
+            profile.setFacebook(request.getFacebook());
+        }
+        if (request.getInstagram() != null) {
+            profile.setInstagram(request.getInstagram());
+        }
+        if (request.getGoogle_business_rating() != null) {
+            profile.setGoogleBusinessRating(request.getGoogle_business_rating());
+        }
 
         // ===== STORE INFO =====
-        profile.setStoreArea(request.getStore_area());
-        profile.setEmployeesCount(request.getEmployees_count());
+        if (request.getStore_area() != null) {
+            profile.setStoreArea(request.getStore_area());
+        }
+        if (request.getEmployees_count() != null) {
+            profile.setEmployeesCount(request.getEmployees_count());
+        }
         
         // ===== TAX CONFIGURATION =====
         if (request.getTax_rate() != null) {
@@ -145,32 +220,54 @@ public class ProfileServiceImpl implements ProfileService {
         
         // ===== PAYMENT GATEWAY CONFIGURATION =====
         // Paytm
-        profile.setPaytmMerchantId(request.getPaytm_merchant_id());
-        profile.setPaytmMerchantKey(request.getPaytm_merchant_key());
-        profile.setPaytmWebhookUrl(request.getPaytm_webhook_url());
+        if (request.getPaytm_merchant_id() != null) {
+            profile.setPaytmMerchantId(request.getPaytm_merchant_id());
+        }
+        if (request.getPaytm_merchant_key() != null) {
+            profile.setPaytmMerchantKey(request.getPaytm_merchant_key());
+        }
+        if (request.getPaytm_webhook_url() != null) {
+            profile.setPaytmWebhookUrl(request.getPaytm_webhook_url());
+        }
         if (request.getPaytm_enabled() != null) {
             profile.setPaytmEnabled(request.getPaytm_enabled());
         }
         
         // PhonePe
-        profile.setPhonepeMerchantId(request.getPhonepe_merchant_id());
-        profile.setPhonepeSaltKey(request.getPhonepe_salt_key());
-        profile.setPhonepeSaltIndex(request.getPhonepe_salt_index());
+        if (request.getPhonepe_merchant_id() != null) {
+            profile.setPhonepeMerchantId(request.getPhonepe_merchant_id());
+        }
+        if (request.getPhonepe_salt_key() != null) {
+            profile.setPhonepeSaltKey(request.getPhonepe_salt_key());
+        }
+        if (request.getPhonepe_salt_index() != null) {
+            profile.setPhonepeSaltIndex(request.getPhonepe_salt_index());
+        }
         if (request.getPhonepe_enabled() != null) {
             profile.setPhonepeEnabled(request.getPhonepe_enabled());
         }
         
         // Razorpay
-        profile.setRazorpayKeyId(request.getRazorpay_key_id());
-        profile.setRazorpayKeySecret(request.getRazorpay_key_secret());
-        profile.setRazorpayWebhookSecret(request.getRazorpay_webhook_secret());
+        if (request.getRazorpay_key_id() != null) {
+            profile.setRazorpayKeyId(request.getRazorpay_key_id());
+        }
+        if (request.getRazorpay_key_secret() != null) {
+            profile.setRazorpayKeySecret(request.getRazorpay_key_secret());
+        }
+        if (request.getRazorpay_webhook_secret() != null) {
+            profile.setRazorpayWebhookSecret(request.getRazorpay_webhook_secret());
+        }
         if (request.getRazorpay_enabled() != null) {
             profile.setRazorpayEnabled(request.getRazorpay_enabled());
         }
         
         // PayU Money
-        profile.setPayuMerchantKey(request.getPayu_merchant_key());
-        profile.setPayuSalt(request.getPayu_salt());
+        if (request.getPayu_merchant_key() != null) {
+            profile.setPayuMerchantKey(request.getPayu_merchant_key());
+        }
+        if (request.getPayu_salt() != null) {
+            profile.setPayuSalt(request.getPayu_salt());
+        }
         if (request.getPayu_enabled() != null) {
             profile.setPayuEnabled(request.getPayu_enabled());
         }
@@ -205,17 +302,30 @@ public class ProfileServiceImpl implements ProfileService {
         if (request.getPaper_size() != null) {
             profile.setPaperSize(request.getPaper_size());
         }
+        if (request.getBill_background_image() != null) {
+            profile.setBillBackgroundImage(request.getBill_background_image());
+        }
 
         // ===== FILE UPLOADS =====
         if (profilePhoto != null && !profilePhoto.isEmpty()) {
-            profile.setProfilePhoto(fileStorageService.save(profilePhoto));
+            System.out.println("📸 Saving profile photo: " + profilePhoto.getOriginalFilename());
+            String savedFileName = fileStorageService.save(profilePhoto);
+            System.out.println("📸 Profile photo saved as: " + savedFileName);
+            profile.setProfilePhoto(savedFileName);
+        } else {
+            System.out.println("📸 No profile photo to save (file is null or empty)");
         }
 
         if (qrCode != null && !qrCode.isEmpty()) {
-            profile.setQrCode(fileStorageService.save(qrCode));
+            System.out.println("📸 Saving QR code: " + qrCode.getOriginalFilename());
+            String savedFileName = fileStorageService.save(qrCode);
+            System.out.println("📸 QR code saved as: " + savedFileName);
+            profile.setQrCode(savedFileName);
         }
 
         Profile savedProfile = profileRepository.save(profile);
+        System.out.println("✅ Profile saved successfully with ID: " + savedProfile.getId());
+        System.out.println("📸 Profile photo in DB: " + savedProfile.getProfilePhoto());
         return mapToResponse(savedProfile, user);
     }
 
@@ -255,8 +365,22 @@ public class ProfileServiceImpl implements ProfileService {
         res.setCin_number(profile.getCinNumber());
 
         res.setDiscount_offers(profile.getDiscountOffers());
-        res.setAccepted_payment_methods(profile.getAcceptedPaymentMethods());
-        res.setProduct_categories(profile.getProductCategories());
+        
+        // Loyalty and Discount Configuration
+        res.setLoyalty_points_enabled(profile.getLoyaltyPointsEnabled());
+        res.setLoyalty_points_rate(profile.getLoyaltyPointsRate());
+        res.setReferral_discount(profile.getReferralDiscount());
+        
+        res.setAccepted_payment_methods(
+                profile.getAcceptedPaymentMethods() == null
+                        ? new ArrayList<>()
+                        : new ArrayList<>(profile.getAcceptedPaymentMethods())
+        );
+        res.setProduct_categories(
+                profile.getProductCategories() == null
+                        ? new ArrayList<>()
+                        : new ArrayList<>(profile.getProductCategories())
+        );
 
         res.setFacebook(profile.getFacebook());
         res.setInstagram(profile.getInstagram());
@@ -304,25 +428,75 @@ public class ProfileServiceImpl implements ProfileService {
         res.setBilling_mode(profile.getBillingMode());
         res.setAuto_billing_confirm(profile.getAutoBillingConfirm());
         res.setPaper_size(profile.getPaperSize());
+        res.setBill_background_image(profile.getBillBackgroundImage());
         
         // Set professional number from user
         if (user != null) {
             res.setProfessional_number(user.getProfessionalNumber());
         }
+        
+        // Set referral code (generate if not exists)
+        String referralCode = profile.getReferralCode();
+        if (referralCode == null || referralCode.isBlank()) {
+            // Generate a referral code based on shop name or user ID
+            String shopName = profile.getShopName() != null ? profile.getShopName() : "STORE";
+            referralCode = shopName.toUpperCase().replaceAll("[^A-Z0-9]", "").substring(0, Math.min(shopName.length(), 6)) + String.format("%04d", user != null ? user.getId() : System.currentTimeMillis() % 10000);
+            profile.setReferralCode(referralCode);
+            profileRepository.save(profile);
+            System.out.println("📸 Generated new referral code: " + referralCode);
+        }
+        res.setReferral_code(referralCode);
+        res.setReference_code(referralCode); // Same as referral_code for compatibility
 
+        // Build dynamic base URL for file uploads
+        String baseUrl = getBaseUrl();
+        
         if (profile.getProfilePhoto() != null) {
-            res.setProfile_photo(
-                "http://localhost:8080/uploads/" + profile.getProfilePhoto()
-            );
+            res.setProfile_photo(baseUrl + "/uploads/" + profile.getProfilePhoto());
         }
 
         if (profile.getQrCode() != null) {
-            res.setQr_code(
-                "http://localhost:8080/uploads/" + profile.getQrCode()
-            );
+            res.setQr_code(baseUrl + "/uploads/" + profile.getQrCode());
         }
 
         return res;
+    }
+    
+    /**
+     * Get the base URL for serving uploaded files.
+     * Uses configured app.base.url if available, otherwise derives from the current request.
+     */
+    private String getBaseUrl() {
+        // First check if a base URL is configured
+        if (appBaseUrl != null && !appBaseUrl.isBlank()) {
+            return appBaseUrl;
+        }
+        
+        // Otherwise, derive from the current request
+        try {
+            if (request != null) {
+                String scheme = request.getScheme();
+                String serverName = request.getServerName();
+                int serverPort = request.getServerPort();
+                
+                // Build URL with proper port handling
+                StringBuilder url = new StringBuilder();
+                url.append(scheme).append("://").append(serverName);
+                
+                // Only append port if it's not the default port for the scheme
+                if (("http".equals(scheme) && serverPort != 80) || 
+                    ("https".equals(scheme) && serverPort != 443)) {
+                    url.append(":").append(serverPort);
+                }
+                
+                return url.toString();
+            }
+        } catch (Exception e) {
+            System.err.println("⚠️ Could not determine base URL from request: " + e.getMessage());
+        }
+        
+        // Fallback to localhost
+        return "http://localhost:8080";
     }
     @Override
     public List<Product> getPublishedProductsByUserId(Long userId) {

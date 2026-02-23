@@ -6,12 +6,22 @@ public class ProductResponse {
     private String name;
     private String category;
     private String barcode;
-    private double price;
-    private int quantity;
-    private int minStock;
-    private int sold;
+    private Double price;
+    private Integer quantity;
+    private Integer minStock;
+    private Integer sold;
     private String expiryDate;
-    private double taxRate;
+    private Double taxRate;
+    private Double netRate;
+
+    public Double getNetRate() {
+        return netRate;
+    }
+
+    public void setNetRate(Double netRate) {
+        this.netRate = netRate;
+    }
+
 	public Long getId() {
 		return id;
 	}

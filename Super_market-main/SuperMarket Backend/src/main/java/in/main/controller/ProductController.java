@@ -16,16 +16,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import in.main.entities.AuditLog.ActionType;
+import in.main.entities.AuditLog.EntityType;
 import in.main.entities.Product;
+import in.main.entities.User;
+import in.main.repository.UserRepository;
+import in.main.service.AuditLogService;
 import in.main.service.ProductService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:8081", "http://localhost:8082", "https://smms.tsaritservices.com"}, allowCredentials = "true")
 public class ProductController {
 
     @Autowired
     private ProductService service;
+
+    @Autowired
+    private AuditLogService auditLogService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private User resolveUser(Long userId) {
+        if (userId == null) return null;
+        return userRepository.findById(userId).orElse(null);
+    }
 
     /* =========================
        INVENTORY (ADMIN)
@@ -33,32 +49,91 @@ public class ProductController {
 
     @GetMapping("/admin/inventory")
     public List<Product> getProducts(@RequestParam Long userId) {
-        return service.getAllProducts(userId);
+        List<Product> products = service.getAllProducts(userId);
+        try {
+            User user = resolveUser(userId);
+            if (user != null) {
+                auditLogService.log(
+                    user.getId(), user.getFullName(), user.getRole().name(),
+                    ActionType.PRODUCT_VIEW, EntityType.INVENTORY,
+                    "Viewed inventory (" + products.size() + " items)"
+                );
+            }
+        } catch (Exception ignored) {}
+        return products;
     }
 
     @PostMapping("/admin/inventory")
     public Product addProduct(
             @RequestParam Long userId,
             @RequestBody Product product) {
-        return service.addProduct(product, userId);
+        Product saved = service.addProduct(product, userId);
+        try {
+            User user = resolveUser(userId);
+            if (user != null) {
+                auditLogService.log(
+                    user.getId(), user.getFullName(), user.getRole().name(),
+                    ActionType.PRODUCT_CREATE, EntityType.PRODUCT, saved.getId(),
+                    "Added product: " + saved.getName() + " | Price: \u20b9" + saved.getPrice()
+                        + " | Qty: " + saved.getQuantity() + " | Barcode: " + (saved.getBarcode() != null ? saved.getBarcode() : "N/A")
+                );
+            }
+        } catch (Exception ignored) {}
+        return saved;
     }
 
     @PutMapping("/admin/inventory/{id}")
     public Product updateProduct(
             @PathVariable Long id,
-            @RequestBody Product product) {
-        return service.updateProduct(id, product);
+            @RequestBody Product product,
+            @RequestParam(required = false) Long userId) {
+        Product updated = service.updateProduct(id, product);
+        try {
+            User user = resolveUser(userId);
+            if (user == null && updated.getUser() != null) user = updated.getUser();
+            if (user != null) {
+                auditLogService.log(
+                    user.getId(), user.getFullName(), user.getRole().name(),
+                    ActionType.PRODUCT_UPDATE, EntityType.PRODUCT, id,
+                    "Updated product: " + updated.getName() + " | Price: \u20b9" + updated.getPrice() + " | Qty: " + updated.getQuantity()
+                );
+            }
+        } catch (Exception ignored) {}
+        return updated;
     }
 
     @DeleteMapping("/admin/inventory/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable Long id, @RequestParam(required = false) Long userId) {
+        try {
+            User user = resolveUser(userId);
+            if (user != null) {
+                auditLogService.log(
+                    user.getId(), user.getFullName(), user.getRole().name(),
+                    ActionType.PRODUCT_DELETE, EntityType.PRODUCT, id,
+                    "Deleted product ID: " + id
+                );
+            }
+        } catch (Exception ignored) {}
         service.deleteProduct(id);
     }
 
     @PutMapping("/admin/inventory/{id}/publish")
-    public Product togglePublish(@PathVariable Long id) {
-        return service.togglePublish(id);
+    public Product togglePublish(@PathVariable Long id, @RequestParam(required = false) Long userId) {
+        Product toggled = service.togglePublish(id);
+        try {
+            User user = resolveUser(userId);
+            if (user != null) {
+        String status = Boolean.TRUE.equals(toggled.getPublished()) ? "Published" : "Unpublished";
+                auditLogService.log(
+                    user.getId(), user.getFullName(), user.getRole().name(),
+                    ActionType.PRODUCT_UPDATE, EntityType.PRODUCT, id,
+                    status + " product: " + toggled.getName()
+                );
+            }
+        } catch (Exception ignored) {}
+        return toggled;
     }
+
     @GetMapping("/shop/products")
     public List<Product> getPublishedProducts(
             @RequestParam(required = false) Long userId) {
@@ -78,10 +153,8 @@ public class ProductController {
 
     @GetMapping("/products")
     public List<Product> getPublishedProductsCompat() {
-        // Compatibility endpoint for frontend calling /api/products
         return getPublishedProducts(null);
     }
-
 
     @GetMapping("/shop/products/barcode/{barcode}")
     public Product getProductByBarcode(
@@ -94,7 +167,18 @@ public class ProductController {
     public ResponseEntity<?> bulkUploadProducts(
             @RequestParam("file") MultipartFile file,
             @RequestParam Long userId) {
-        return service.bulkUploadProducts(file, userId);
+        ResponseEntity<?> result = service.bulkUploadProducts(file, userId);
+        try {
+            User user = resolveUser(userId);
+            if (user != null) {
+                auditLogService.log(
+                    user.getId(), user.getFullName(), user.getRole().name(),
+                    ActionType.PRODUCT_CREATE, EntityType.PRODUCT,
+                    "Bulk uploaded products from file: " + file.getOriginalFilename()
+                );
+            }
+        } catch (Exception ignored) {}
+        return result;
     }
 
 }

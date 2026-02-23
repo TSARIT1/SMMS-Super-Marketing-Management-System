@@ -13,16 +13,17 @@ public class ProfileRequest {
     private String shop_address;
     private String phone_number;
     private String email;
+    private String account_email;
     private String website;
 
     private String opening_time;
     private String closing_time;
     private String working_days;
 
-    private boolean homeDelivery;
-    private boolean parkingAvailable;
-    private boolean acceptsOnlineOrders;
-    private boolean deliveryAvailable;
+    private Boolean homeDelivery;
+    private Boolean parkingAvailable;
+    private Boolean acceptsOnlineOrders;
+    private Boolean deliveryAvailable;
 
 
     private String bank_account_name;
@@ -37,6 +38,11 @@ public class ProfileRequest {
     private String cin_number;
 
     private String discount_offers;
+    
+    // Loyalty and Discount Configuration
+    private Boolean loyalty_points_enabled;
+    private Double loyalty_points_rate;
+    private Double referral_discount;
 
     private List<String> accepted_payment_methods;
     private List<String> product_categories;
@@ -87,6 +93,7 @@ public class ProfileRequest {
     private String billing_mode;
     private Boolean auto_billing_confirm;
     private String paper_size;
+    private String bill_background_image;
     
 	public String getShop_name() {
 		return shop_name;
@@ -130,6 +137,12 @@ public class ProfileRequest {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getAccount_email() {
+		return account_email;
+	}
+	public void setAccount_email(String account_email) {
+		this.account_email = account_email;
+	}
 	public String getWebsite() {
 		return website;
 	}
@@ -155,28 +168,28 @@ public class ProfileRequest {
 		this.working_days = working_days;
 	}
 
-	public boolean isHomeDelivery() {
+	public Boolean getHomeDelivery() {
 		return homeDelivery;
 	}
-	public void setHomeDelivery(boolean homeDelivery) {
+	public void setHomeDelivery(Boolean homeDelivery) {
 		this.homeDelivery = homeDelivery;
 	}
-	public boolean isParkingAvailable() {
+	public Boolean getParkingAvailable() {
 		return parkingAvailable;
 	}
-	public void setParkingAvailable(boolean parkingAvailable) {
+	public void setParkingAvailable(Boolean parkingAvailable) {
 		this.parkingAvailable = parkingAvailable;
 	}
-	public boolean isAcceptsOnlineOrders() {
+	public Boolean getAcceptsOnlineOrders() {
 		return acceptsOnlineOrders;
 	}
-	public void setAcceptsOnlineOrders(boolean acceptsOnlineOrders) {
+	public void setAcceptsOnlineOrders(Boolean acceptsOnlineOrders) {
 		this.acceptsOnlineOrders = acceptsOnlineOrders;
 	}
-	public boolean isDeliveryAvailable() {
+	public Boolean getDeliveryAvailable() {
 		return deliveryAvailable;
 	}
-	public void setDeliveryAvailable(boolean deliveryAvailable) {
+	public void setDeliveryAvailable(Boolean deliveryAvailable) {
 		this.deliveryAvailable = deliveryAvailable;
 	}
 	public String getBank_account_name() {
@@ -450,6 +463,32 @@ public class ProfileRequest {
 	}
 	public void setPaper_size(String paper_size) {
 		this.paper_size = paper_size;
+	}
+	public String getBill_background_image() {
+		return bill_background_image;
+	}
+	public void setBill_background_image(String bill_background_image) {
+		this.bill_background_image = bill_background_image;
+	}
+
+	// Loyalty and Discount Configuration Getters & Setters
+	public Boolean getLoyalty_points_enabled() {
+		return loyalty_points_enabled;
+	}
+	public void setLoyalty_points_enabled(Boolean loyalty_points_enabled) {
+		this.loyalty_points_enabled = loyalty_points_enabled;
+	}
+	public Double getLoyalty_points_rate() {
+		return loyalty_points_rate;
+	}
+	public void setLoyalty_points_rate(Double loyalty_points_rate) {
+		this.loyalty_points_rate = loyalty_points_rate;
+	}
+	public Double getReferral_discount() {
+		return referral_discount;
+	}
+	public void setReferral_discount(Double referral_discount) {
+		this.referral_discount = referral_discount;
 	}
     
 }

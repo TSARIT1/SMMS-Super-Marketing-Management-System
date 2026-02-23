@@ -1,7 +1,17 @@
 package in.main.entities;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "audit_logs", indexes = {
@@ -67,6 +77,17 @@ public class AuditLog {
     // Additional data (JSON format for flexibility)
     @Column(columnDefinition = "TEXT")
     private String additionalData;
+
+    // Unique request identifier to prevent duplicate logs
+    @Column(length = 100)
+    private String uniqueRequestId;
+
+    public String getUniqueRequestId() {
+        return uniqueRequestId;
+    }
+    public void setUniqueRequestId(String uniqueRequestId) {
+        this.uniqueRequestId = uniqueRequestId;
+    }
     
     @Column(nullable = false)
     private LocalDateTime timestamp;
@@ -119,7 +140,7 @@ public class AuditLog {
     
     // Constructors
     public AuditLog() {
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now(ZoneId.of("Asia/Kolkata"));
         this.status = ActionStatus.SUCCESS;
     }
     

@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "ਡੈਸ਼ਬੋਰਡ", "shop": "ਦੁਕਾਨ", "cart": "ਕਾਰਟ", "inventory": "ਸਟਾਕ", "profile": "ਪ੍ਰੋਫਾਈਲ", "logout": "ਲੌਗ ਆਉਟ", "logoutAdmin": "ਐਡਮਿਨ ਲੌਗ ਆਉਟ", "pendingPayments": "ਬਕਾਇਆ ਭੁਗਤਾਨ — ਜਾਰੀ ਰੱਖਣ ਲਈ ਕਲਿੱਕ ਕਰੋ", "choosePlan": "ਯੋਜਨਾ ਚੁਣੋ", "noSubscription": "ਕੋਈ ਸਰਗਰਮ ਮੈਂਬਰਸ਼ਿਪ ਨਹੀਂ.", "resumePayment": "ਭੁਗਤਾਨ ਜਾਰੀ ਰੱਖੋ" },
+  "dashboard": { "todayRevenue": "ਅੱਜ ਦੀ ਆਮਦਨ", "totalRevenue": "ਕੁੱਲ ਆਮਦਨ", "totalProducts": "ਕੁੱਲ ਉਤਪਾਦ", "lowStockAlert": "ਘੱਟ ਸਟਾਕ ਚੇਤਾਵਨੀ", "outOfStock": "ਸਟਾਕ ਖਤਮ", "today": "ਅੱਜ", "week": "ਹਫ਼ਤਾ", "month": "ਮਹੀਨਾ", "year": "ਸਾਲ", "revenue": "ਆਮਦਨ", "orders": "ਆਰਡਰ" },
+  "audit": { "title": "ਆਡਿਟ ਟ੍ਰੇਲ", "successful": "ਸਫਲ", "failed": "ਅਸਫਲ", "justNow": "ਹੁਣੇ", "minutesAgo": "{{count}} ਮਿੰਟ ਪਹਿਲਾਂ", "hoursAgo": "{{count}} ਘੰਟੇ ਪਹਿਲਾਂ", "daysAgo": "{{count}} ਦਿਨ ਪਹਿਲਾਂ" },
+  "common": { "loading": "ਲੋਡ ਹੋ ਰਿਹਾ...", "error": "ਗਲਤੀ", "success": "ਸਫਲ", "cancel": "ਰੱਦ", "currency": "₹" },
+  "theme": { "title": "ਥੀਮ", "light": "ਲਾਈਟ", "dark": "ਡਾਰਕ", "system": "ਸਿਸਟਮ" },
+  "language": { "title": "ਭਾਸ਼ਾ" }
+}

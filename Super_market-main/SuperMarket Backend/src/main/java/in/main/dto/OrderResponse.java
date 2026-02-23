@@ -5,8 +5,10 @@ public class OrderResponse {
     private Long id;
     private String customer;
     private String date;
-    private int items;
-    private double total;
+    private Integer items;
+    private Double total;
+    private Double mrpTotal;
+    private Double discount;
 	public Long getId() {
 		return id;
 	}
@@ -25,17 +27,33 @@ public class OrderResponse {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public int getItems() {
-		return items;
-	}
-	public void setItems(int items) {
-		this.items = items;
-	}
-	public double getTotal() {
-		return total;
-	}
-	public void setTotal(double total) {
-		this.total = total;
+public Integer getItems() {
+        return items;
+    }
+    public void setItems(Integer items) {
+        this.items = items;
+    }
+    public Double getTotal() {
+        return total;
+    }
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    public Double getMrpTotal() {
+        return mrpTotal;
+    }
+
+    public void setMrpTotal(Double mrpTotal) {
+        this.mrpTotal = mrpTotal;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
 	}
 
 }

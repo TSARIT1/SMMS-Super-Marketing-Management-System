@@ -20,7 +20,7 @@ import in.main.repository.UserRepository;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository repo;
@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(AuthRequests.RegisterRequest req) {
+        LOGGER.info("Registering new user with email: {}", req.getEmail());
         User u = new User();
         u.setFullName(req.getFullName());
         u.setEmail(req.getEmail());
@@ -53,7 +54,8 @@ public class UserServiceImpl implements UserService {
         
         // Save user to database
         User savedUser = repo.save(u);
-        
+        LOGGER.info("User registered successfully: {}", savedUser.getEmail());
+
         // Send welcome email
         try {
             emailService.sendWelcomeEmail(
@@ -63,11 +65,12 @@ public class UserServiceImpl implements UserService {
                 savedUser.getShopName(),
                 savedUser.getProfessionalNumber()
             );
+            LOGGER.info("Welcome email sent to {}", savedUser.getEmail());
         } catch (Exception e) {
             // Log error but don't fail registration if email fails
-            logger.error("Failed to send welcome email to {}", savedUser.getEmail(), e);
+            LOGGER.error("Failed to send welcome email to {}", savedUser.getEmail(), e);
         }
-        
+
         return savedUser;
     }
     
@@ -78,16 +81,37 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
     public Optional<User> login(AuthRequests.LoginRequest req) {
+        LOGGER.info("Login attempt for: {}", req.getEmailOrPhone());
         Optional<User> maybe = repo.findByEmail(req.getEmailOrPhone());
         if (maybe.isEmpty()) {
             maybe = repo.findByPhone(req.getEmailOrPhone());
         }
         if (maybe.isPresent()) {
             User u = maybe.get();
-            if (encoder.matches(req.getPassword(), u.getPasswordHash())) {
+            String storedPassword = u.getPasswordHash();
+            if (storedPassword == null || storedPassword.isBlank()) {
+                LOGGER.warn("Login failed: No password set for user {}", req.getEmailOrPhone());
+                return Optional.empty();
+            }
+
+            // Standard BCrypt validation
+            if (encoder.matches(req.getPassword(), storedPassword)) {
+                LOGGER.info("Login successful for user: {}", req.getEmailOrPhone());
                 return Optional.of(u);
             }
+
+            // Legacy/dev fallback: allow plain-text password rows and migrate to BCrypt.
+            if (req.getPassword() != null && req.getPassword().equals(storedPassword)) {
+                u.setPasswordHash(encoder.encode(req.getPassword()));
+                repo.save(u);
+                LOGGER.info("Login successful (legacy password) for user: {}", req.getEmailOrPhone());
+                return Optional.of(u);
+            }
+            LOGGER.warn("Login failed: Incorrect password for user {}", req.getEmailOrPhone());
+        } else {
+            LOGGER.warn("Login failed: User not found for {}", req.getEmailOrPhone());
         }
         return Optional.empty();
     }
@@ -109,9 +133,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void initiatePasswordReset(String email) {
+        LOGGER.info("Initiating password reset for email: {}", email);
         Optional<User> foundUser = repo.findByEmail(email);
 
         if (foundUser.isEmpty()) {
+            LOGGER.warn("Password reset requested for non-existent email: {}", email);
             return; // security: don't reveal existence
         }
 
@@ -124,18 +150,28 @@ public class UserServiceImpl implements UserService {
         repo.save(user);
 
         String resetLink = frontendUrl + "/reset-password?token=" + rawToken;
-        emailService.sendResetPasswordLink(user.getEmail(), resetLink);
+        try {
+            emailService.sendResetPasswordLink(user.getEmail(), resetLink);
+            LOGGER.info("Password reset link sent to {}", user.getEmail());
+        } catch (Exception e) {
+            LOGGER.error("Failed to send password reset link to {}", user.getEmail(), e);
+        }
     }
 
     @Override
     public void resetPassword(AuthRequests.ResetPassword req) {
+        LOGGER.info("Resetting password for token: {}", req.getToken());
         String tokenHash = DigestUtils.sha256Hex(req.getToken());
 
         User user = repo.findByResetTokenHash(tokenHash)
-                .orElseThrow(() -> new RuntimeException("Invalid or expired reset link"));
+                .orElseThrow(() -> {
+                    LOGGER.warn("Invalid or expired reset link for token: {}", req.getToken());
+                    return new RuntimeException("Invalid or expired reset link");
+                });
 
         if (user.getResetTokenExpiry() == null ||
             user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            LOGGER.warn("Reset link expired for user: {}", user.getEmail());
             throw new RuntimeException("Reset link expired");
         }
 
@@ -144,5 +180,6 @@ public class UserServiceImpl implements UserService {
         user.setResetTokenExpiry(null);
 
         repo.save(user);
+        LOGGER.info("Password reset successful for user: {}", user.getEmail());
     }
 }

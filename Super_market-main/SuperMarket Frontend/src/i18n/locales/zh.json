@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "仪表盘", "shop": "商店", "cart": "购物车", "inventory": "库存", "profile": "个人资料", "logout": "退出", "logoutAdmin": "管理员退出", "pendingPayments": "待付款 — 点击继续", "choosePlan": "选择方案", "noSubscription": "没有活跃订阅.", "resumePayment": "恢复付款" },
+  "dashboard": { "todayRevenue": "今日收入", "totalRevenue": "总收入", "totalProducts": "产品总数", "lowStockAlert": "低库存警报", "outOfStock": "缺货", "today": "今天", "week": "本周", "month": "本月", "year": "今年", "revenue": "收入", "orders": "订单" },
+  "audit": { "title": "审计跟踪", "successful": "成功", "failed": "失败", "justNow": "刚才", "minutesAgo": "{{count}}分钟前", "hoursAgo": "{{count}}小时前", "daysAgo": "{{count}}天前" },
+  "common": { "loading": "加载中...", "error": "错误", "success": "成功", "cancel": "取消", "currency": "₹" },
+  "theme": { "title": "主题", "light": "浅色", "dark": "深色", "system": "系统" },
+  "language": { "title": "语言" }
+}

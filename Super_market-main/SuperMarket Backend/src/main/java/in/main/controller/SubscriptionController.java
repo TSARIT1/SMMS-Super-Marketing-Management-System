@@ -16,14 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.main.dto.SubscriptionResponse;
+import in.main.entities.AuditLog.ActionType;
+import in.main.entities.AuditLog.EntityType;
 import in.main.entities.SubscriptionPlan;
+import in.main.entities.User;
 import in.main.repository.PaymentTransactionRepository;
 import in.main.repository.SubscriptionPlanRepository;
+import in.main.repository.UserRepository;
+import in.main.service.AuditLogService;
 import in.main.service.SubscriptionService;
 
 @RestController
 @RequestMapping("/api/subscription")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:8081", "http://localhost:8082", "https://smms.tsaritservices.com"}, allowCredentials = "true")
 public class SubscriptionController {
 
     @Autowired
@@ -34,6 +39,12 @@ public class SubscriptionController {
 
     @Autowired
     private PaymentTransactionRepository paymentTransactionRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private Long resolveUserId(Long headerUserId) {
         if (headerUserId != null) return headerUserId;
@@ -100,6 +111,19 @@ public class SubscriptionController {
             if (plan.getPrice() == null || Double.compare(plan.getPrice(), 0.0) == 0) {
                 // Start free trial / immediate activation
                 subscriptionService.startFreeTrial(uid);
+
+                // Audit log
+                try {
+                    User user = userRepository.findById(uid).orElse(null);
+                    if (user != null) {
+                        auditLogService.log(
+                            user.getId(), user.getFullName(), user.getRole().name(),
+                            ActionType.SUBSCRIPTION_CREATE, EntityType.SUBSCRIPTION, planId,
+                            "Started FREE TRIAL | Plan: " + plan.getPlanName() + " | Duration: " + plan.getDurationDays() + " days"
+                        );
+                    }
+                } catch (Exception ignored) {}
+
                 Map<String, Object> result = new HashMap<>();
                 result.put("order", null);
                 result.put("plan", Map.of(
@@ -116,6 +140,19 @@ public class SubscriptionController {
             // Default provider is Razorpay; frontend can pass provider = "acurato" to use Acurato
             String effectiveProvider = (provider == null || provider.isBlank()) ? "razorpay" : provider;
             Map<String, Object> orderData = subscriptionService.createOrder(uid, plan.getPlanType().name(), plan.getPrice(), effectiveProvider);
+
+            // Audit log
+            try {
+                User user = userRepository.findById(uid).orElse(null);
+                if (user != null) {
+                    auditLogService.log(
+                        user.getId(), user.getFullName(), user.getRole().name(),
+                        ActionType.SUBSCRIPTION_CREATE, EntityType.SUBSCRIPTION, planId,
+                        "Subscribed to plan: " + plan.getPlanName() + " | Price: \u20b9" + plan.getPrice()
+                            + " | Duration: " + plan.getDurationDays() + " days | Provider: " + effectiveProvider
+                    );
+                }
+            } catch (Exception ignored) {}
 
             return ResponseEntity.ok(Map.of(
                 "order", orderData,
@@ -146,6 +183,12 @@ public class SubscriptionController {
                 var tx = optTx.get();
                 tx.setStatus(in.main.entities.PaymentTransaction.PaymentStatus.FAILED);
                 paymentTransactionRepository.save(tx);
+
+                // Audit log
+                try {
+                    auditLogService.logAction("ORDER_CANCEL", "System", "Cancelled payment order: " + orderId, in.main.entities.AuditLog.ActionStatus.SUCCESS);
+                } catch (Exception ignored) {}
+
                 return ResponseEntity.ok(Map.of("status", "cancelled", "orderId", orderId));
             } else {
                 // Not found: record a cancelled transaction placeholder

@@ -140,10 +140,12 @@ public class DashboardServiceImpl implements DashboardService {
         dto.setName(p.getName());
         dto.setCategory(p.getCategory());
         dto.setBarcode(p.getBarcode());
-        dto.setPrice(p.getPrice() == null ? 0.0 : p.getPrice());
-        dto.setQuantity(p.getQuantity() == null ? 0 : p.getQuantity());
-        dto.setMinStock(p.getMinStock() == null ? 0 : p.getMinStock());
-        dto.setSold(p.getSold() == null ? 0 : p.getSold());
+        dto.setPrice(p.getPrice());
+        dto.setQuantity(p.getQuantity());
+        dto.setMinStock(p.getMinStock());
+        dto.setSold(p.getSold());
+        dto.setTaxRate(p.getTaxRate());
+        dto.setNetRate(p.getNetRate());
         dto.setExpiryDate(
             p.getExpiryDate() != null ? p.getExpiryDate().toString() : null
         );

@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    "shop": "ಅಂಗಡಿ",
+    "cart": "ಕಾರ್ಟ್",
+    "inventory": "ದಾಸ್ತಾನು",
+    "profile": "ಪ್ರೊಫೈಲ್",
+    "logout": "ಲಾಗ್ ಔಟ್",
+    "logoutAdmin": "ಅಡ್ಮಿನ್ ಲಾಗ್ ಔಟ್",
+    "pendingPayments": "ಬಾಕಿ ಪಾವತಿಗಳು — ಮುಂದುವರಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ",
+    "choosePlan": "ಯೋಜನೆ ಆಯ್ಕೆಮಾಡಿ",
+    "noSubscription": "ಸಕ್ರಿಯ ಚಂದಾ ಇಲ್ಲ — ಕೆಲವು ವೈಶಿಷ್ಟ್ಯಗಳು ಲಭ್ಯವಿಲ್ಲ.",
+    "resumePayment": "ಪಾವತಿ ಮುಂದುವರಿಸಿ"
+  },
+  "dashboard": {
+    "todayRevenue": "ಇಂದಿನ ಆದಾಯ",
+    "totalRevenue": "ಒಟ್ಟು ಆದಾಯ",
+    "totalProducts": "ಒಟ್ಟು ಉತ್ಪನ್ನಗಳು",
+    "lowStockAlert": "ಕಡಿಮೆ ದಾಸ್ತಾನು ಎಚ್ಚರಿಕೆ",
+    "outOfStock": "ಸ್ಟಾಕ್ ಮುಗಿದಿದೆ",
+    "today": "ಇಂದು",
+    "week": "ವಾರ",
+    "month": "ತಿಂಗಳು",
+    "year": "ವರ್ಷ",
+    "revenue": "ಆದಾಯ",
+    "orders": "ಆರ್ಡರ್‌ಗಳು"
+  },
+  "audit": {
+    "title": "ಆಡಿಟ್ ಟ್ರೈಲ್",
+    "successful": "ಯಶಸ್ವಿ",
+    "failed": "ವಿಫಲ",
+    "justNow": "ಈಗಷ್ಟೇ",
+    "minutesAgo": "{{count}} ನಿಮಿಷಗಳ ಹಿಂದೆ",
+    "hoursAgo": "{{count}} ಗಂಟೆಗಳ ಹಿಂದೆ",
+    "daysAgo": "{{count}} ದಿನಗಳ ಹಿಂದೆ"
+  },
+  "common": { "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...", "error": "ದೋಷ", "success": "ಯಶಸ್ಸು", "cancel": "ರದ್ದುಮಾಡಿ", "currency": "₹" },
+  "theme": { "title": "ಥೀಮ್", "light": "ಲೈಟ್", "dark": "ಡಾರ್ಕ್", "system": "ಸಿಸ್ಟಮ್" },
+  "language": { "title": "ಭಾಷೆ" }
+}

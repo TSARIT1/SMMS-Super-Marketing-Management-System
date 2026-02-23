@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "ড্যাশবোর্ড", "shop": "দোকান", "cart": "কার্ট", "inventory": "ইনভেন্টরি", "profile": "প্রোফাইল", "logout": "লগ আউট", "logoutAdmin": "অ্যাডমিন লগ আউট", "pendingPayments": "মুলতুবি পেমেন্ট — চালিয়ে যেতে ক্লিক করুন", "choosePlan": "প্ল্যান বেছে নিন", "noSubscription": "কোনো সক্রিয় সাবস্ক্রিপশন নেই.", "resumePayment": "পেমেন্ট পুনরায় শুরু করুন" },
+  "dashboard": { "todayRevenue": "আজকের আয়", "totalRevenue": "মোট আয়", "totalProducts": "মোট পণ্য", "lowStockAlert": "কম স্টক সতর্কতা", "outOfStock": "স্টক শেষ", "today": "আজ", "week": "সপ্তাহ", "month": "মাস", "year": "বছর", "revenue": "আয়", "orders": "অর্ডার" },
+  "audit": { "title": "অডিট ট্রেইল", "successful": "সফল", "failed": "ব্যর্থ", "justNow": "এইমাত্র", "minutesAgo": "{{count}} মিনিট আগে", "hoursAgo": "{{count}} ঘন্টা আগে", "daysAgo": "{{count}} দিন আগে" },
+  "common": { "loading": "লোড হচ্ছে...", "error": "ত্রুটি", "success": "সফল", "cancel": "বাতিল", "currency": "₹" },
+  "theme": { "title": "থিম", "light": "লাইট", "dark": "ডার্ক", "system": "সিস্টেম" },
+  "language": { "title": "ভাষা" }
+}

@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "ഡാഷ്‌ബോർഡ്", "shop": "കട", "cart": "കാർട്ട്", "inventory": "ഇൻവെന്ററി", "profile": "പ്രൊഫൈൽ", "logout": "ലോഗ് ഔട്ട്", "logoutAdmin": "അഡ്മിൻ ലോഗ് ഔട്ട്", "pendingPayments": "പെൻഡിംഗ് പേയ്‌മെന്റ് — തുടരാൻ ക്ലിക്ക് ചെയ്യുക", "choosePlan": "പ്ലാൻ തിരഞ്ഞെടുക്കുക", "noSubscription": "സജീവ സബ്‌സ്‌ക്രിപ്ഷൻ ഇല്ല.", "resumePayment": "പേയ്‌മെന്റ് തുടരുക" },
+  "dashboard": { "todayRevenue": "ഇന്നത്തെ വരുമാനം", "totalRevenue": "ആകെ വരുമാനം", "totalProducts": "ആകെ ഉൽപ്പന്നങ്ങൾ", "lowStockAlert": "കുറഞ്ഞ സ്റ്റോക്ക് മുന്നറിയിപ്പ്", "outOfStock": "സ്റ്റോക്ക് ഇല്ല", "today": "ഇന്ന്", "week": "ആഴ്ച", "month": "മാസം", "year": "വർഷം", "revenue": "വരുമാനം", "orders": "ഓർഡറുകൾ" },
+  "audit": { "title": "ഓഡിറ്റ് ട്രെയിൽ", "successful": "വിജയകരം", "failed": "പരാജയം", "justNow": "ഇപ്പോൾ", "minutesAgo": "{{count}} മിനിറ്റ് മുമ്പ്", "hoursAgo": "{{count}} മണിക്കൂർ മുമ്പ്", "daysAgo": "{{count}} ദിവസങ്ങൾ മുമ്പ്" },
+  "common": { "loading": "ലോഡ് ചെയ്യുന്നു...", "error": "പിശക്", "success": "വിജയം", "cancel": "റദ്ദാക്കുക", "currency": "₹" },
+  "theme": { "title": "തീം", "light": "ലൈറ്റ്", "dark": "ഡാർക്ക്", "system": "സിസ്റ്റം" },
+  "language": { "title": "ഭാഷ" }
+}

@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "Panel", "shop": "Tienda", "cart": "Carrito", "inventory": "Inventario", "profile": "Perfil", "logout": "Cerrar sesión", "logoutAdmin": "Cerrar sesión Admin", "pendingPayments": "Pagos pendientes — haga clic para continuar", "choosePlan": "Elegir un plan", "noSubscription": "Sin suscripción activa — algunas funciones pueden no estar disponibles.", "resumePayment": "Reanudar pago" },
+  "dashboard": { "todayRevenue": "Ingresos de hoy", "totalRevenue": "Ingresos totales", "totalProducts": "Total de productos", "lowStockAlert": "Alerta de bajo stock", "outOfStock": "Sin stock", "today": "Hoy", "week": "Semana", "month": "Mes", "year": "Año", "revenue": "Ingresos", "orders": "Pedidos" },
+  "audit": { "title": "Registro de auditoría", "successful": "Exitoso", "failed": "Fallido", "justNow": "Ahora mismo", "minutesAgo": "hace {{count}} min", "hoursAgo": "hace {{count}} h", "daysAgo": "hace {{count}} días" },
+  "common": { "loading": "Cargando...", "error": "Error", "success": "Éxito", "cancel": "Cancelar", "currency": "₹" },
+  "theme": { "title": "Tema", "light": "Claro", "dark": "Oscuro", "system": "Sistema" },
+  "language": { "title": "Idioma" }
+}

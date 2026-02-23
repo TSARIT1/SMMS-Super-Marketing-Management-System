@@ -15,7 +15,7 @@ import in.main.service.JobService;
 
 @RestController
 @RequestMapping("/api/jobs")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:8081", "http://localhost:8082"}, allowCredentials = "true")
 public class JobController {
 
     @Autowired

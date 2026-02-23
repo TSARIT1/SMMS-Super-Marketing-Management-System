@@ -50,7 +50,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:8081", "http://localhost:8082"}, allowCredentials = "true")
 public class AdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -597,9 +597,19 @@ public class AdminController {
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             String roleStr = request.get("role");
+            String oldRole = user.getRole().name();
             User.Role newRole = User.Role.valueOf(roleStr);
             user.setRole(newRole);
             userRepository.save(user);
+
+            // Audit log
+            try {
+                auditLogService.log(
+                    userId, user.getFullName(), newRole.name(),
+                    ActionType.USER_UPDATE, EntityType.USER, userId,
+                    "User role changed: " + oldRole + " → " + newRole.name() + " for user: " + user.getFullName()
+                );
+            } catch (Exception ignored) {}
 
             return ResponseEntity.ok(Map.of("message", "User role updated successfully", "role", newRole.name()));
         } catch (Exception e) {
@@ -619,6 +629,18 @@ public class AdminController {
             subscription.setAutoRenew(false);
             subscriptionRepository.save(subscription);
 
+            // Audit log
+            try {
+                User user = subscription.getUser();
+                auditLogService.log(
+                    user != null ? user.getId() : null,
+                    user != null ? user.getFullName() : "Admin",
+                    "ADMIN",
+                    ActionType.SUBSCRIPTION_CANCEL, EntityType.SUBSCRIPTION, subscriptionId,
+                    "Subscription cancelled by admin for subscription ID: " + subscriptionId
+                );
+            } catch (Exception ignored) {}
+
             return ResponseEntity.ok(Map.of("message", "Subscription cancelled successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -635,6 +657,18 @@ public class AdminController {
 
             subscription.setStatus(Subscription.SubscriptionStatus.ACTIVE);
             subscriptionRepository.save(subscription);
+
+            // Audit log
+            try {
+                User user = subscription.getUser();
+                auditLogService.log(
+                    user != null ? user.getId() : null,
+                    user != null ? user.getFullName() : "Admin",
+                    "ADMIN",
+                    ActionType.SUBSCRIPTION_UPDATE, EntityType.SUBSCRIPTION, subscriptionId,
+                    "Subscription activated by admin for subscription ID: " + subscriptionId
+                );
+            } catch (Exception ignored) {}
 
             return ResponseEntity.ok(Map.of("message", "Subscription activated successfully"));
         } catch (Exception e) {

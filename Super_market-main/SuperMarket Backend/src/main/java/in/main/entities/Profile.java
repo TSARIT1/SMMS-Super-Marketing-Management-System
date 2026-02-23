@@ -46,7 +46,7 @@ public class Profile {
     private String bankAccountNumber;
     private String bankName;
     private String ifscCode;
-    private String upiId;
+    private String upiId = "tsaritprivatelimited@iob";
 
     private String gstNumber;
     private String tinNumber;
@@ -55,6 +55,11 @@ public class Profile {
 
     @Column(length = 1000)
     private String discountOffers;
+    
+    // Loyalty and Discount Configuration
+    private Boolean loyaltyPointsEnabled = false;
+    private Double loyaltyPointsRate = 1.0;
+    private Double referralDiscount = 0.0;
 
     @ElementCollection
     @CollectionTable(name = "profile_payment_methods", joinColumns = @JoinColumn(name = "profile_id"))
@@ -112,10 +117,15 @@ public class Profile {
     private String billingMode = "manual"; // "manual" or "ai"
     private Boolean autoBillingConfirm = false;
     private String paperSize = "80mm"; // "58mm", "80mm", "A4", "A5"
+    private String billBackgroundImage; // Custom background image for bill/receipt
 
     // ✅ FILE PATHS (CORRECT)
     private String profilePhoto;
     private String qrCode;
+    
+    // Referral code for the store
+    @Column(unique = true)
+    private String referralCode;
 
     // ===== Getters & Setters =====
     public Long getId() { return id; }
@@ -491,6 +501,39 @@ public class Profile {
 	public void setPaperSize(String paperSize) {
 		this.paperSize = paperSize;
 	}
+	public String getBillBackgroundImage() {
+		return billBackgroundImage;
+	}
+	public void setBillBackgroundImage(String billBackgroundImage) {
+		this.billBackgroundImage = billBackgroundImage;
+	}
 
+	// Loyalty and Discount Configuration Getters & Setters
+	public Boolean getLoyaltyPointsEnabled() {
+		return loyaltyPointsEnabled;
+	}
+	public void setLoyaltyPointsEnabled(Boolean loyaltyPointsEnabled) {
+		this.loyaltyPointsEnabled = loyaltyPointsEnabled;
+	}
+	public Double getLoyaltyPointsRate() {
+		return loyaltyPointsRate;
+	}
+	public void setLoyaltyPointsRate(Double loyaltyPointsRate) {
+		this.loyaltyPointsRate = loyaltyPointsRate;
+	}
+	public Double getReferralDiscount() {
+		return referralDiscount;
+	}
+	public void setReferralDiscount(Double referralDiscount) {
+		this.referralDiscount = referralDiscount;
+	}
+
+	// Referral Code Getter & Setter
+	public String getReferralCode() {
+		return referralCode;
+	}
+	public void setReferralCode(String referralCode) {
+		this.referralCode = referralCode;
+	}
 
 }

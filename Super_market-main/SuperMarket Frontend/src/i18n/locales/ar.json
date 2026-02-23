@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "لوحة التحكم", "shop": "المتجر", "cart": "السلة", "inventory": "المخزون", "profile": "الملف الشخصي", "logout": "تسجيل الخروج", "logoutAdmin": "خروج المسؤول", "pendingPayments": "مدفوعات معلقة — انقر للمتابعة", "choosePlan": "اختر خطة", "noSubscription": "لا يوجد اشتراك نشط.", "resumePayment": "استئناف الدفع" },
+  "dashboard": { "todayRevenue": "إيرادات اليوم", "totalRevenue": "إجمالي الإيرادات", "totalProducts": "إجمالي المنتجات", "lowStockAlert": "تنبيه مخزون منخفض", "outOfStock": "نفد المخزون", "today": "اليوم", "week": "الأسبوع", "month": "الشهر", "year": "السنة", "revenue": "الإيرادات", "orders": "الطلبات" },
+  "audit": { "title": "سجل التدقيق", "successful": "ناجح", "failed": "فشل", "justNow": "الآن", "minutesAgo": "منذ {{count}} دقيقة", "hoursAgo": "منذ {{count}} ساعة", "daysAgo": "منذ {{count}} يوم" },
+  "common": { "loading": "جار التحميل...", "error": "خطأ", "success": "نجاح", "cancel": "إلغاء", "currency": "₹" },
+  "theme": { "title": "السمة", "light": "فاتح", "dark": "داكن", "system": "النظام" },
+  "language": { "title": "اللغة" }
+}

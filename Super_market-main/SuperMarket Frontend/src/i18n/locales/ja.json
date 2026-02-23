@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "ダッシュボード", "shop": "ショップ", "cart": "カート", "inventory": "在庫", "profile": "プロフィール", "logout": "ログアウト", "logoutAdmin": "管理者ログアウト", "pendingPayments": "支払い保留中 — クリックで続行", "choosePlan": "プランを選択", "noSubscription": "アクティブなサブスクリプションがありません.", "resumePayment": "支払いを再開" },
+  "dashboard": { "todayRevenue": "今日の収益", "totalRevenue": "総収益", "totalProducts": "総製品数", "lowStockAlert": "在庫不足アラート", "outOfStock": "在庫なし", "today": "今日", "week": "週", "month": "月", "year": "年", "revenue": "収益", "orders": "注文" },
+  "audit": { "title": "監査ログ", "successful": "成功", "failed": "失敗", "justNow": "たった今", "minutesAgo": "{{count}}分前", "hoursAgo": "{{count}}時間前", "daysAgo": "{{count}}日前" },
+  "common": { "loading": "読み込み中...", "error": "エラー", "success": "成功", "cancel": "キャンセル", "currency": "₹" },
+  "theme": { "title": "テーマ", "light": "ライト", "dark": "ダーク", "system": "システム" },
+  "language": { "title": "言語" }
+}

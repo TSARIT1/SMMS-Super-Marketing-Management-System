@@ -20,6 +20,8 @@ public class OrderItem {
     private String productName;
     private int quantity;
     private double price;
+    private double mrp;
+    private double netPrice;
 
     public Long getId() {
 		return id;
@@ -59,6 +61,22 @@ public class OrderItem {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public double getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(double mrp) {
+		this.mrp = mrp;
+	}
+
+	public double getNetPrice() {
+		return netPrice;
+	}
+
+	public void setNetPrice(double netPrice) {
+		this.netPrice = netPrice;
 	}
 
 	public Order getOrder() {

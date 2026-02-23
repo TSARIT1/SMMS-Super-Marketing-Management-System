@@ -1,9 +1,8 @@
 package in.main.repository;
 
-import in.main.entities.AuditLog;
-import in.main.entities.AuditLog.ActionType;
-import in.main.entities.AuditLog.EntityType;
-import in.main.entities.AuditLog.ActionStatus;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import in.main.entities.AuditLog;
+import in.main.entities.AuditLog.ActionStatus;
+import in.main.entities.AuditLog.ActionType;
+import in.main.entities.AuditLog.EntityType;
 
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
@@ -109,4 +110,7 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
 
     // Get all audit logs ordered by timestamp desc
     List<AuditLog> findAllByOrderByTimestampDesc();
+    
+        @Query("SELECT a FROM AuditLog a WHERE a.userId = :userId AND a.actionType = :actionType AND a.timestamp > :since")
+        List<AuditLog> findRecentByUserIdAndActionType(@Param("userId") Long userId, @Param("actionType") ActionType actionType, @Param("since") LocalDateTime since);
 }

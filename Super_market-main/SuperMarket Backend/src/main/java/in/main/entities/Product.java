@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -177,4 +178,26 @@ public class Product {
 		this.taxRate = taxRate;
 	}
     
+    @Column(name = "net_rate")
+    private Double netRate;
+
+    public Double getNetRate() {
+        return netRate;
+    }
+
+    public void setNetRate(Double netRate) {
+        this.netRate = netRate;
+    }
+
+    // JSON compatibility for frontend (uses `netPrice`).
+    @JsonProperty("netPrice")
+    public Double getNetPrice() {
+        return this.netRate;
+    }
+
+    @JsonProperty("netPrice")
+    public void setNetPrice(Double netPrice) {
+        this.netRate = netPrice;
+    }
 }
+

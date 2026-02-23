@@ -1,0 +1,1111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script
+      src="https://kit.fontawesome.com/06a08d1706.js"
+      crossorigin="anonymous"
+    ></script>
+    
+    <title>About Us - TSAR Company</title>
+    <style>
+      :root {
+  --primary: #12132d;
+  --primary-2: #1a1d6e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h1 {
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+ul {
+  list-style: none;
+  /* display: flex; */
+  margin: 0;
+  padding: 0;
+}
+
+
+.mySlides {
+  display: none;
+}
+
+.mySlides-2 {
+  display: none;
+}
+
+img {
+  vertical-align: middle;
+}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 100%;
+  position: relative;
+  margin: auto;
+}
+
+/* Next & previous buttons */
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.mainDiv {
+  height: 500px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.col-left {
+  width: 50%;
+  /* padding: 40px; */
+  display: grid;
+  place-items: center;
+  height: 550px;
+  color: #fff;
+  background: linear-gradient(to left, #000 80%, #000 10%, #8181812d);
+}
+
+.col-left>h1 {
+  width: 70%;
+  line-height: 40px;
+  padding: 0;
+  font-size: 21.1px;
+}
+
+.ceo-name {
+  display: block;
+  text-align: end;
+  transform: translateY(28px);
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active,
+.dot:hover {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+
+  .prev,
+  .next,
+  .text {
+    font-size: 11px;
+  }
+
+  .dot {
+    height: 10px;
+    width: 10px;
+  }
+
+  @media only screen and (max-width: 500px) {
+
+    .prev,
+    .next,
+    .text {
+      font-size: 14px;
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.a {
+  display: block;
+  width: 100%;
+}
+
+.flex-btn {
+  display: flex;
+  color: #333;
+  width: 100%;
+}
+
+.about {
+  width: 100%;
+  border: 1px solid #fff;
+  padding: 15px 10px;
+  transition: all 0.3s linear;
+  cursor: pointer;
+}
+
+.about:hover {
+  background: linear-gradient(200deg, var(--primary), var(--primary-2));
+  color: #fff;
+}
+
+.container-block {
+  display: flex;
+  padding: 30px;
+  background-color: #04050a;
+  color: #ffff;
+}
+
+.text-count {
+  width: 100%;
+}
+
+.text-b {
+  padding: 20px 0;
+  color: #fff;
+}
+
+.global-video {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.span-row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.span {
+  display: flex;
+  flex-direction: column;
+  width: 29%;
+  margin: 15px 0;
+  font-size: 16px;
+  padding: 5px 0;
+}
+
+.span-h {
+  font-size: 56px;
+  margin: 5px 0;
+  background: -webkit-linear-gradient(120deg, #0b3fb7, #9047df);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.back-video {
+  width: 100%;
+}
+
+.block-padding {
+  padding: 40px 70px;
+}
+
+.cards-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.case-cards {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 30px 0 0;
+  height: 550px;
+  width: 370px;
+  position: relative;
+  overflow: hidden;
+}
+
+.case-cards:hover {
+  background-color: #dee8ff;
+}
+
+.case-img {
+  width: 100%;
+  height: 250px;
+  transition: all 0.2s linear;
+}
+
+.case-cards:hover .case-img {
+  transform: scale(1.09);
+}
+
+.case-head,
+.case-text,
+.text-visible {
+  padding: 0 25px;
+}
+
+.case-head {
+  font-size: 24px;
+  margin: 20px 0;
+  margin-top: 20px;
+}
+
+.case-text {
+  font-size: 16px;
+}
+
+.case-learn-more {
+  width: 0;
+  overflow: hidden;
+  transition: all 0.01s ease-in-out;
+}
+
+.case-cards:hover .case-learn-more {
+  width: 100%;
+}
+
+.text-visible {
+  position: absolute;
+  bottom: 5%;
+  color: #000;
+  visibility: visible;
+  display: flex;
+}
+
+.arrow-visible {
+  display: flex;
+  padding: 0 5px;
+  margin: 2px 0;
+  align-items: center;
+}
+
+/* supercharging styles */
+.container-img-text {
+  background: linear-gradient(to right, #00000023, #00000023, #0000001d),
+    url("./media/text-back.jpg") center no-repeat;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-contain {
+  text-align: center;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  text-shadow: 0 2px 6px #232323;
+}
+
+.big-text {
+  font-size: 44px;
+  font-weight: 500;
+}
+
+.title {
+  font-size: 44px;
+  font-weight: 500;
+}
+
+.context {
+  font-size: 18px;
+}
+
+.small-text {
+  width: 70%;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 26px;
+}
+
+.report {
+  color: #ffffff;
+  margin: 10px 0;
+  position: relative;
+  padding: 3px 4px;
+  font-size: 25px;
+}
+
+.blue {
+  transition: all 0.2s linear;
+}
+
+.report:hover .blue {
+  color: darkblue;
+}
+
+.report::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 9px 0 0 0;
+  height: 2.5px;
+  width: 0;
+  background-color: darkblue;
+  transition: all 0.2s linear;
+  font-size: 24px;
+}
+
+.report:hover::after {
+  width: 100%;
+}
+
+/* expertise styles */
+.area-text-header {
+  padding: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.area-text-header .main-head {
+  font-size: 50px;
+  font-weight: 500;
+}
+
+.p {
+  width: 60%;
+  font-size: 23px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.our-expertise-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.our-expertise {
+  position: relative;
+  width: 300px;
+  height: 410px;
+  background-color: var(--primary);
+  color: #fff;
+  margin: 0 0.5px;
+  padding: 80px 30px;
+}
+
+.our-expertise:hover {
+  background: linear-gradient(220deg, #8d8d98, #12132d);
+}
+
+.our-h1 {
+  font-size: 28px;
+  margin: 20px 0;
+  font-weight: 500;
+}
+
+.our-context {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 300;
+  height: 100%;
+}
+
+.p-bottom {
+  position: absolute;
+  bottom: 5%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.our-link {
+  display: block;
+  width: 0%;
+  color: #fff;
+  overflow: hidden;
+  /* transition: width .1s linear; */
+}
+
+.our-expertise:hover .our-link {
+  width: 100%;
+}
+
+.logo-nk {
+  transform: scale(1.2);
+}
+
+/* partners */
+.partners-col {
+  display: flex;
+}
+
+.our-parrtner-ecosystem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.flex-box {
+  display: grid;
+  place-items: left;
+  align-items: center;
+  padding: 60px 40px 60px 60px;
+}
+
+.flex-box>p {
+  font-size: 20px;
+  width: 60%;
+  margin: 20px 0;
+}
+
+.three-1 {
+  background-color: #e4ebff;
+  color: #000000;
+  border: 1px solid #b6b6b6;
+  padding: 10px 30px;
+}
+
+.three-1:hover {
+  background-color: #0b3fb7;
+  color: #fff;
+}
+
+.scrolling-imgs {
+  display: flex;
+  width: 100%;
+  padding: 60px 20px;
+}
+
+/* footer logo */
+
+.footer-col {
+  display: flex;
+  height: 220px;
+  background: linear-gradient(to left, #12132d 1%, #2a2fba);
+  color: #fff;
+}
+
+.company-logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Nunito;
+}
+
+
+        .footer-col{
+          display: flex;
+          align-items: center;
+        }
+        .flexBlock{
+          display: flex;
+          gap: 10px;
+        }
+        .input-letter{
+          padding: 0px 30px;
+          outline: none;
+          height: 50px;
+          margin-top: 13px;
+        }
+        .three{
+          padding: 0 20px;
+         margin-left: 30%;
+         border-radius: 2px;
+        }
+
+.ct-us {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big {
+  font-size: 80px;
+  margin: 0 10px;
+  padding: 0 20px;
+}
+
+.small {
+  font-size: 28px;
+  border-left: 3px solid #bbb;
+  padding: 0 20px;
+}
+
+.btns-s {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact {
+  padding: 12px 50px;
+  margin: 10px 0;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color, color 0.2s linear;
+}
+
+.one {
+  background-color: inherit;
+  color: #ffffff;
+}
+
+.one:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.two:hover {
+  background-color: inherit;
+  color: #fff;
+}
+
+.move {
+  transition: all 0.3s linear;
+}
+
+.contact:hover .move {
+  transform: translateX(15px);
+}
+
+/* our mission and vision styles */
+
+.img-container {
+  border: 1px solid #e1e1e1;
+  padding: 0;
+  margin: 100px 10px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 9px 5px #bdbdbd;;
+}
+.img-container:nth-child(odd){
+  background: rgb(34,193,195);
+background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+}
+.img-container:nth-child(even){
+  background: rgb(34,193,195);
+background: linear-gradient(180deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+}
+.our{
+  color: #fff;
+}
+
+/* .image-1 {
+  background: linear-gradient(to right, #00000074, #00000044, #00000074),
+    url("../HTML/img-1.jpg") center/cover no-repeat;
+}
+.image-2 {
+  background: linear-gradient(to right, #00000074, #00000044, #00000074),
+    url("../HTML/img-2.jpg") center/cover no-repeat;
+} */
+.back {
+  backdrop-filter: blur(6px);
+  width: 100%;
+  padding: 80px 100px;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 150px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 50px;
+  text-align: center;
+  margin: 30px 0 50px 0;
+  color: #000000;
+}
+
+.our {
+  font-size: 20px;
+  color: #000000;
+  margin: 15px 0;
+  text-align: center;
+}
+    </style>
+  </head>
+  <body>
+    <header>
+      {% include './header.html' %}
+    </header>
+
+    <section id="main">
+      <div class="random">
+        <p style="padding: 10px 100px; font-size: 12x">
+          <a href="/" class="link-home">Home</a>
+          <i class="fa-solid fa-angle-right"></i> About Us
+        </p>
+        <div class="slideshow-container">
+          <div
+            class="mySlides fade"
+            style="
+              background: url(./media/about-banner.jpg) top/cover no-repeat;
+              height: 550px;
+            "
+          >
+            
+            <div class="mainDiv">
+              <div class="col-left">
+                <h1>
+                  <q
+                    >Acquiring the right talent is the most important key to
+                    growth Hiring was and still is - the most important thing we
+                    do.
+                  </q>
+                  <span class="ceo-name">CEO - Wesly Rakesh</span>
+                </h1>
+              </div>
+            </div>
+            <div class="text"></div>
+          </div>
+          <div class="mySlides fade">
+            <div class="numbertext"></div>
+            <img
+              src="https://wallpapercave.com/wp/wp2019326.jpg"
+              style="width: 100%; height: 600px; object-fit: cover;"
+            />
+            <div class="text"></div>
+          </div>
+          <!-- <div class="mySlides fade">
+            <div class="numbertext">3 / 3</div>
+            <img
+              src="../media/bannerMain.jpeg"
+              style="width: 100%; height: 500px"
+            />
+            <div class="text">Caption Three</div>
+          </div> -->
+          <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+          <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <nav>
+        <div class="flex-btn">
+          <!-- <a href="#bynumbers" class="a"
+            ><button class="about">By the Numbers</button></a
+          > -->
+          <a href="#" class="a"><button class="about">Our History</button></a>
+          <a href="#our-mission" class="a"
+            ><button class="about">Our Mission</button></a
+          >
+          <a href="#our-vission" class="a"
+            ><button class="about">Our Vision</button></a
+          >
+          <a href="#commitement" class="a"
+            ><button class="about">Our Commitement</button></a
+          >
+          <a href="#exprtise" class="a"
+            ><button class="about">Our Expertise</button></a
+          >
+        </div>
+      </nav>
+      <section id="bynumbers">
+        <div class="container-block">
+          <div class="text-count">
+            <h2 class="text-b">
+              Diverse and passionate people
+              across 20 countries, we deliver smarter, better ways for all our
+              stakeholders to benefit from technology.
+            </h2>
+            <div class="span-row">
+              <span class="span"
+                ><h1 class="span-h">10+</h1>
+                Projects Done</span
+              >
+              <span class="span"
+                ><h1 class="span-h">10+</h1>
+                Clients using our software and products</span
+              >
+
+              <!-- <span class="span"
+                ><h1 class="span-h">5.13Mn</h1>
+                Lives impacted by HCL Foundation</span
+              > -->
+            </div>
+          </div>
+          <div class="global-video">
+            <video autoplay loop muted class="back-video">
+              <source src="./media/global.mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <section class="img-container image-1" id="our-mission">
+        <div class="back">
+          <div class="text-our">
+            <h1 class="title">Our Mission</h1>
+            <p class="our">
+              "To provide the best in class, creative, unique Software Solutions
+              that can solve all our client’s business problems that they face
+              on day to day bases. We provide software & solutions for companies
+              of all sizes and all industry sectors. We thrive in achieving
+              excellence in providing the best IT solutions to our clients so
+              that they can meet their business needs in the most effective and
+              efficient way.
+            </p>
+            <p class="our">
+              "Our dedicated team provides you solutions that make achieving
+              business objectives easier and in a much efficient way. We provide
+              the highest standard of products to our client base belonging to
+              all verticals. We outsource IT services to different industries
+              across the globe which includes Complex Software Solutions, web
+              application & Other IT services. Our team members are young and
+              trained. We listen and provide services to our clients that are
+              tailor made for their business. We have sustainable base of
+              clients who trust us for our quality service in the field of
+              Software & Web Application development.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="img-container image-2" id="our-vission">
+        <div class="back">
+          <div class="text-our">
+            <h1 class="title">Our Vision</h1>
+            <p class="our">
+              "TSAR - IT IT vision helps us understand and provide a sense of
+              direction on how we drive our business. It serves as a beacon
+              directing all our thoughts and efforts towards achieving our goal.
+              Since inception, TSAR - IT IT has truly evolved over the years
+              from a start-up IT services company to a trusted IT partner for
+              leaders in the telecom world. Our vision is to be amongst the top
+              five software services companies focused on the communications
+              industry.
+            </p>
+            <p class="our" style="font-family: poppins;">
+              "TSAR IT - Inovative Solutions & Consultancy we focus on high
+              quality & timely delivery of our Services. We provide cost
+              effective and customized solutions.m
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- 
+      <section style="background-color: #f7f7fc">
+        <div class="block-padding">
+          <h1 class="title">Case Studies</h1>
+          <p class="context">
+            We don’t just paint visions of progress. We make them happen for the
+            world’s leading enterprises.
+          </p>
+          <div class="cards-col">
+            <div class="case-cards">
+              <img src="../media/digital-m.jpeg" alt="" class="case-img" />
+              <h1 class="case-head">
+                Reimagining IT service management through artificial
+                intelligence
+              </h1>
+              <p class="case-text">
+                We redefined business process for a leading furniture retailer
+              </p>
+              <div class="text-visible">
+                <a href="#" class="case-learn-more">learn more </a
+                ><i class="fa-solid arrow-visible fa-arrow-right"></i>
+              </div>
+            </div>
+            <div class="case-cards">
+              <img src="../media/digital-m.jpeg" alt="" class="case-img" />
+              <h1 class="case-head">
+                Reimagining shipping through machine learning data science
+              </h1>
+              <p class="case-text">
+                TSAR IT redsigned operating system to improve predictability and
+                CX for global logistics provider
+              </p>
+              <div class="text-visible">
+                <a href="#" class="case-learn-more">learn more </a
+                ><i class="fa-solid arrow-visible fa-arrow-right"></i>
+              </div>
+            </div>
+            <div class="case-cards">
+              <img src="../media/digital-m.jpeg" alt="" class="case-img" />
+              <h1 class="case-head">
+                Achieving agility the cloud for Keurig Pepper
+              </h1>
+              <p class="case-text">
+                hybrid cloud architecture and technology standardization
+                provides simplification, flexibility and 40% reduction in IT
+                operating cost
+              </p>
+              <div class="text-visible">
+                <a href="#" class="case-learn-more">learn more </a
+                ><i class="fa-solid arrow-visible fa-arrow-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> -->
+      <section id="commitement">
+        <div class="container-img-text">
+          <div class="text-contain">
+            <h1 class="big-text"></h1>
+            <p class="small-text">
+              We are delivering long-lasting impact through our actions as a
+              company and through our pacts with stakeholders for a more
+              sustainable future.
+            </p>
+            <!-- <a href="#" class="report">
+              TSAR IT Foundation <i class="fa-solid blue fa-arrow-right"></i>
+            </a> -->
+            <!-- <a href="#" class="report"
+              >TSAR IT Sustainability Annual Report 2022
+              <i class="fa-solid blue fa-arrow-right"></i>
+            </a> -->
+          </div>
+        </div>
+      </section>
+      <section id="exprtise">
+        <div class="area-text-header">
+          <h1 class="main-head">Our Areas of Expertise</h1>
+          <p class="p">
+            With expertise in Digital, Engineering and Cloud, we deliver
+            solutions that fulfill the traditional, transformational and future
+            needs of clients across the globe
+          </p>
+        </div>
+        <div class="our-expertise-col">
+          <div class="our-expertise">
+            <div class="hover-move">
+              <div class="anime-logo">
+                <img src="./media/digital.svg" alt="" class="logo-nk" />
+              </div>
+              <h1 class="our-h1">Digital</h1>
+              <p class="our-context">
+                TSAR IT’s end-to-end Digital offerings enable enterprises to
+                increase business resilience, improve operational efficiency and
+                deepen client engagement.
+              </p>
+            </div>
+            <div class="p-bottom">
+              <a href="/insights" class="our-link">learn more </a>
+              <i class="fa-solid move-2 fa-arrow-right"></i>
+            </div>
+          </div>
+          <div class="our-expertise">
+            <div class="hover-move">
+              <div class="anime-logo">
+                <img
+                  src="./media/engineering1.svg"
+                  alt=""
+                  class="logo-nk"
+                />
+              </div>
+              <h1 class="our-h1">Engineering</h1>
+              <p class="our-context">
+                TSAR IT Engineering and R&D services (ERS) empower enterprises
+                to improve time-to-profit, accelerate product development and
+                maximize return on innovation.
+              </p>
+            </div>
+            <div class="p-bottom">
+              <a href="#" class="our-link">learn more </a
+              ><i class="fa-solid move-2 fa-arrow-right"></i>
+            </div>
+          </div>
+          <div class="our-expertise">
+            <div class="hover-move">
+              <div class="anime-logo">
+                <img src="./media/cloud.svg" alt="" class="logo-nk" />
+              </div>
+              <h1 class="our-h1">Cloud</h1>
+              <p class="our-context">
+                TSAR IT’s exclusive CloudSMART offerings and services enable
+                organizations to optimize cloud to accelerate innovation and
+                agility at scale.
+              </p>
+            </div>
+            <div class="p-bottom">
+              <a href="#" class="our-link">learn more </a
+              ><i class="fa-solid move-2 fa-arrow-right"></i>
+            </div>
+          </div>
+          <div class="our-expertise">
+            <div class="hover-move">
+              <div class="anime-logo">
+                <img src="./media/software.svg" alt="" class="logo-nk" />
+              </div>
+              <h1 class="our-h1">Software</h1>
+              <p class="our-context">
+                TSAR IT’s Software division develops, markets and supports
+                software for digital transformation, data, analytics and
+                insights, AI and automation and enterprise security.
+              </p>
+            </div>
+            <div class="p-bottom">
+              <a href="#" class="our-link">learn more </a
+              ><i class="fa-solid move-2 fa-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+      <br><br>
+      <!-- <section>
+        <div class="partners-col">
+          <div class="our-parrtner-ecosystem">
+            <div class="flex-box">
+              <h1 class="title">Our Partner Ecosystem</h1>
+              <p>
+                Our collaborative ecosystem of market leaders brings together
+                TSAR IT’s world-class innovation and deep partner expertise to
+                innovate for the future and drive value.
+              </p>
+              <a href="#" class="learn-more"
+                ><button class="contact three-1">
+                  Discover more
+                  <i class="fa-solid move fa-arrow-right"></i></button
+              ></a>
+            </div>
+          </div>
+          <div class="scrolling-imgs">
+            <h1>scroll here our clients</h1>
+          </div>
+        </div>
+      </section>
+    </section> -->
+
+    <div class="footer-col">
+      <div class="company-logo">
+        <h1 class="big">TSAR IT</h1>
+      </div>
+      <div class="newsletter">
+        
+        <div class="block flexBlock" style="display: flex;">
+          <input type="email" name="" id="" placeholder="example@gmail.com" class="input-letter">
+          <button class="contact two three" >send</button>
+        </div>
+      </div>
+      
+      <div class="ct-us">
+        <div class="btns-s">
+          <a href="/contact">
+            <button class="contact one">
+              Contact Us <i class="fa-solid move fa-arrow-right"></i>
+            </button>
+          </a>
+          <!-- <a href="">
+            <button class="contact two">
+            Subscribe <i class="fa-solid move fa-arrow-right"></i>
+          </button>
+          </a> -->
+        </div>
+      </div>
+    </div>
+{% include 'footer.html' %}
+    <script>
+      var slideIndex = 0;
+  showSlides();
+  function showSlides() {
+    var i;
+   var slides = document.getElementsByClassName("mySlides");
+   for (i = 0; i < slides.length; i++) {
+       slides[i].style.display = "none";
+   }
+   slideIndex++;
+   if (slideIndex > slides.length) { slideIndex = 1 }
+   slides[slideIndex - 1].style.display = "block";
+   setTimeout(showSlides, 3000); // Change image every 2 seconds
+}
+
+    </script>
+  </body>
+</html>

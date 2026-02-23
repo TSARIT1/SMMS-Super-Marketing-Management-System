@@ -35,6 +35,11 @@ public class ProfileResponse {
     private String cin_number;
 
     private String discount_offers;
+    
+    // Loyalty and Discount Configuration
+    private Boolean loyalty_points_enabled;
+    private Double loyalty_points_rate;
+    private Double referral_discount;
 
     private List<String> accepted_payment_methods;
     private List<String> product_categories;
@@ -50,6 +55,10 @@ public class ProfileResponse {
     private String qr_code;
     
     private String professional_number;
+    
+    // Referral code
+    private String referral_code;
+    private String reference_code;
     
     // Tax Configuration
     private Double tax_rate;
@@ -90,6 +99,7 @@ public class ProfileResponse {
     private String billing_mode;
     private Boolean auto_billing_confirm;
     private String paper_size;
+    private String bill_background_image;
     
 	public String getShop_name() {
 		return shop_name;
@@ -470,6 +480,46 @@ public class ProfileResponse {
 	}
 	public void setPaper_size(String paper_size) {
 		this.paper_size = paper_size;
+	}
+	public String getBill_background_image() {
+		return bill_background_image;
+	}
+	public void setBill_background_image(String bill_background_image) {
+		this.bill_background_image = bill_background_image;
+	}
+
+	// Loyalty and Discount Configuration Getters & Setters
+	public Boolean getLoyalty_points_enabled() {
+		return loyalty_points_enabled;
+	}
+	public void setLoyalty_points_enabled(Boolean loyalty_points_enabled) {
+		this.loyalty_points_enabled = loyalty_points_enabled;
+	}
+	public Double getLoyalty_points_rate() {
+		return loyalty_points_rate;
+	}
+	public void setLoyalty_points_rate(Double loyalty_points_rate) {
+		this.loyalty_points_rate = loyalty_points_rate;
+	}
+	public Double getReferral_discount() {
+		return referral_discount;
+	}
+	public void setReferral_discount(Double referral_discount) {
+		this.referral_discount = referral_discount;
+	}
+
+	// Referral Code Getters & Setters
+	public String getReferral_code() {
+		return referral_code;
+	}
+	public void setReferral_code(String referral_code) {
+		this.referral_code = referral_code;
+	}
+	public String getReference_code() {
+		return reference_code;
+	}
+	public void setReference_code(String reference_code) {
+		this.reference_code = reference_code;
 	}
     
 }

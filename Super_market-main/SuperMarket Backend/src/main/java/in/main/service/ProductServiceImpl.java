@@ -77,6 +77,11 @@ public class ProductServiceImpl implements ProductService {
             existing.setTaxRate(updated.getTaxRate());
         }
 
+        // If net rate provided, persist it
+        if (updated.getNetRate() != null) {
+            existing.setNetRate(updated.getNetRate());
+        }
+
         // FIX: Boolean-safe check (no == with null)
         if (updated.getPublished() != null) {
             existing.setPublished(updated.getPublished());

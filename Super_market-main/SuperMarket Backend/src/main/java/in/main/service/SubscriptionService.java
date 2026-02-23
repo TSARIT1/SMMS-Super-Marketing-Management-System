@@ -8,8 +8,10 @@ import in.main.dto.SubscriptionResponse;
 import in.main.entities.PaymentTransaction;
 import in.main.entities.PlanType;
 import in.main.entities.Subscription;
+import in.main.entities.SubscriptionPlan;
 import in.main.entities.User;
 import in.main.repository.PaymentTransactionRepository;
+import in.main.repository.SubscriptionPlanRepository;
 import in.main.repository.SubscriptionRepository;
 import in.main.repository.UserRepository;
 import org.json.JSONObject;
@@ -31,6 +33,9 @@ public class SubscriptionService {
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+
+    @Autowired
+    private SubscriptionPlanRepository subscriptionPlanRepository;
 
     @Autowired
     private PaymentTransactionRepository paymentTransactionRepository;
@@ -207,6 +212,25 @@ public class SubscriptionService {
         response.setTrialEndDate(subscription.getTrialEndDate() != null ? subscription.getTrialEndDate().toString() : null);
         response.setTrialActive(subscription.isTrialActive());
         response.setAmountPaid(subscription.getAmountPaid() != null ? subscription.getAmountPaid().doubleValue() : null);
+
+        // Look up plan details from subscription_plans table
+        SubscriptionPlan plan = subscriptionPlanRepository.findByPlanType(subscription.getPlanType()).orElse(null);
+        if (plan != null) {
+            response.setPlanName(plan.getPlanName());
+            response.setDescription(plan.getDescription());
+            response.setMaxProducts(plan.getMaxProducts());
+            response.setMaxUsers(plan.getMaxUsers());
+            response.setPrice(plan.getPrice());
+            response.setDurationDays(plan.getDurationDays());
+        } else {
+            // Fallback for plans not in the table
+            response.setPlanName(subscription.getPlanType().name());
+            response.setDescription("Subscription plan");
+            response.setMaxProducts(-1);
+            response.setMaxUsers(-1);
+            response.setPrice(0);
+            response.setDurationDays(0);
+        }
 
         // Calculate days remaining
         if (subscription.getEndDate() != null) {

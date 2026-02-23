@@ -143,4 +143,165 @@ public class EmailLog {
             unsubscribeToken = java.util.UUID.randomUUID().toString();
         }
     }
+
+    // Explicit Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
+
+    public String getRecipientName() {
+        return recipientName;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public EmailStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EmailStatus status) {
+        this.status = status;
+    }
+
+    public EmailPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(EmailPriority priority) {
+        this.priority = priority;
+    }
+
+    public String getEmailType() {
+        return emailType;
+    }
+
+    public void setEmailType(String emailType) {
+        this.emailType = emailType;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    public Long getSentBy() {
+        return sentBy;
+    }
+
+    public void setSentBy(Long sentBy) {
+        this.sentBy = sentBy;
+    }
+
+    public String getSentByName() {
+        return sentByName;
+    }
+
+    public void setSentByName(String sentByName) {
+        this.sentByName = sentByName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getSentAt() {
+        return sentAt;
+    }
+
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
+    }
+
+    public LocalDateTime getDeliveredAt() {
+        return deliveredAt;
+    }
+
+    public void setDeliveredAt(LocalDateTime deliveredAt) {
+        this.deliveredAt = deliveredAt;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public Integer getRetryCount() {
+        return retryCount;
+    }
+
+    public void setRetryCount(Integer retryCount) {
+        this.retryCount = retryCount;
+    }
+
+    public Integer getMaxRetries() {
+        return maxRetries;
+    }
+
+    public void setMaxRetries(Integer maxRetries) {
+        this.maxRetries = maxRetries;
+    }
+
+    public LocalDateTime getNextRetryAt() {
+        return nextRetryAt;
+    }
+
+    public void setNextRetryAt(LocalDateTime nextRetryAt) {
+        this.nextRetryAt = nextRetryAt;
+    }
+
+    public Boolean getIsOpened() {
+        return isOpened;
+    }
+
+    public void setIsOpened(Boolean isOpened) {
+        this.isOpened = isOpened;
+    }
+
+    public Boolean getIsClicked() {
+        return isClicked;
+    }
+
+    public void setIsClicked(Boolean isClicked) {
+        this.isClicked = isClicked;
+    }
 }

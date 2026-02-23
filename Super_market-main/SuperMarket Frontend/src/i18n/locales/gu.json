@@ -1,0 +1,8 @@
+{
+  "nav": { "dashboard": "ડેશબોર્ડ", "shop": "દુકાન", "cart": "કાર્ટ", "inventory": "ઇન્વેન્ટરી", "profile": "પ્રોફાઇલ", "logout": "લૉગ આઉટ", "logoutAdmin": "એડમિન લૉગ આઉટ", "pendingPayments": "બાકી ચુકવણી — ચાલુ રાખવા ક્લિક કરો", "choosePlan": "પ્લાન પસંદ કરો", "noSubscription": "કોઈ સક્રિય સબ્સ્ક્રિપ્શન નથી.", "resumePayment": "ચુકવણી ફરી શરૂ કરો" },
+  "dashboard": { "todayRevenue": "આજની આવક", "totalRevenue": "કુલ આવક", "totalProducts": "કુલ ઉત્પાદનો", "lowStockAlert": "ઓછો સ્ટોક ચેતવણી", "outOfStock": "સ્ટોક ખતમ", "today": "આજે", "week": "સપ્તાહ", "month": "મહિનો", "year": "વર્ષ", "revenue": "આવક", "orders": "ઓર્ડર" },
+  "audit": { "title": "ઓડિટ ટ્રેલ", "successful": "સફળ", "failed": "નિષ્ફળ", "justNow": "હમણાં", "minutesAgo": "{{count}} મિનિટ પહેલાં", "hoursAgo": "{{count}} કલાક પહેલાં", "daysAgo": "{{count}} દિવસ પહેલાં" },
+  "common": { "loading": "લોડ થઈ રહ્યું છે...", "error": "ભૂલ", "success": "સફળ", "cancel": "રદ કરો", "currency": "₹" },
+  "theme": { "title": "થીમ", "light": "લાઇટ", "dark": "ડાર્ક", "system": "સિસ્ટમ" },
+  "language": { "title": "ભાષા" }
+}

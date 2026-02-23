@@ -1,0 +1,108 @@
+# ============================================
+# Robots.txt for SMMS - Super Market Management System
+# TSAR IT Services
+# Optimized for Google First Rank SEO
+# ============================================
+
+# Allow all search engines
+User-agent: *
+
+# Allow all pages to be indexed
+Allow: /
+
+# Disallow admin and private pages
+Disallow: /api/
+Disallow: /profile/
+Disallow: /dashboard
+Disallow: /inventory
+Disallow: /cart
+Disallow: /onboarding
+Disallow: /super-admin/
+Disallow: /admin/
+
+# Allow specific public API endpoints for SEO
+Allow: /api/products
+Allow: /api/categories
+Allow: /api/public/
+
+# Allow static assets
+Allow: /assets/
+Allow: /images/
+Allow: /favicon.ico
+Allow: /manifest.json
+Allow: /sitemap.xml
+
+# Sitemap location
+Sitemap: https://smms.tsaritservices.com/sitemap.xml
+
+# Crawl delay for server performance (optional)
+Crawl-delay: 1
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /assets/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Baidu
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Crawl-delay: 2
+
+# Facebook
+User-agent: facebookexternalhit
+Allow: /
+
+# Twitter
+User-agent: Twitterbot
+Allow: /
+
+# LinkedIn
+User-agent: LinkedInBot
+Allow: /
+
+# Pinterest
+User-agent: Pinterest
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# Host directive (for Yandex)
+Host: https://smms.tsaritservices.com

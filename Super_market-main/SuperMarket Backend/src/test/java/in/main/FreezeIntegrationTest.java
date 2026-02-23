@@ -23,7 +23,14 @@ public class FreezeIntegrationTest {
     @Test
     public void freeze_unfreeze_blockLogin() throws Exception {
         String registerUrl = "http://localhost:" + port + "/api/register";
-        String registerBody = "{\"full_name\":\"Freeze Tester\",\"shop_name\":\"Freeze Shop\",\"shop_address\":\"Test\",\"email\":\"freeze-test@example.com\",\"phone\":\"9999999999\",\"password\":\"pass123\"}";
+        long now = System.currentTimeMillis();
+        String uniq = String.valueOf(now % 1000000);
+        String testEmail = "freeze-test-" + uniq + "@example.com";
+        String testPhone = String.format("99%08d", now % 100000000);
+        String registerBody = String.format(
+            "{\"full_name\":\"Freeze Tester\",\"shop_name\":\"Freeze Shop\",\"shop_address\":\"Test\",\"email\":\"%s\",\"phone\":\"%s\",\"password\":\"pass123\"}",
+            testEmail, testPhone
+        );
 
         HttpRequest regReq = HttpRequest.newBuilder()
                 .uri(URI.create(registerUrl))
@@ -37,7 +44,7 @@ public class FreezeIntegrationTest {
 
         // Login as created user
         String loginUrl = "http://localhost:" + port + "/api/login";
-        String loginBody = "{\"emailOrPhone\":\"freeze-test@example.com\",\"password\":\"pass123\"}";
+        String loginBody = String.format("{\"emailOrPhone\":\"%s\",\"password\":\"pass123\"}", testEmail);
         HttpRequest loginReq = HttpRequest.newBuilder().uri(URI.create(loginUrl)).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(loginBody)).timeout(Duration.ofSeconds(10)).build();
         HttpResponse<String> loginRes = http.send(loginReq, HttpResponse.BodyHandlers.ofString());
         assertThat(loginRes.statusCode()).isBetween(200, 299);

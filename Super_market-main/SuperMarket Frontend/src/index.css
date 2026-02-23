@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+@custom-variant dark (&.dark);
+
+:root {
+  --brand-primary: #0ea5a4; /* teal-500 */
+  --brand-accent: #06b6d4; /* cyan-500 */
+  --muted: #6b7280; /* gray-500 */
+  --surface: #ffffff;
+  --radius-lg: 0.75rem;
+  --card-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  --card-shadow-strong: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+.dark {
+  --surface: #1f2937;
+  --muted: #9ca3af;
+  --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  --card-shadow-strong: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* Global improvements */
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #111827; /* gray-900 */
+  background-color: #f8fafc; /* gray-50 */
+}
+
+.dark body,
+.dark #root {
+  color: #f3f4f6;
+  background-color: #111827;
+}
+
+/* Dark mode overrides for common elements */
+.dark .bg-white { background-color: #1f2937 !important; }
+.dark .bg-gray-50 { background-color: #111827 !important; }
+.dark .bg-gray-100 { background-color: #1f2937 !important; }
+.dark .text-gray-800 { color: #e5e7eb !important; }
+.dark .text-gray-900 { color: #f3f4f6 !important; }
+.dark .text-gray-700 { color: #d1d5db !important; }
+.dark .text-gray-600 { color: #9ca3af !important; }
+.dark .text-gray-500 { color: #6b7280 !important; }
+.dark .border-gray-200 { border-color: #374151 !important; }
+.dark .border-gray-300 { border-color: #4b5563 !important; }
+.dark .border-b { border-color: #374151; }
+.dark .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+
+/* Dark mode card styling */
+.dark .card,
+.dark .card-lg {
+  background: var(--surface);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Dark mode specific backgrounds */
+.dark .bg-green-50 { background-color: rgba(34, 197, 94, 0.1) !important; }
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.1) !important; }
+.dark .bg-blue-50 { background-color: rgba(59, 130, 246, 0.1) !important; }
+.dark .bg-yellow-50 { background-color: rgba(234, 179, 8, 0.1) !important; }
+.dark .bg-purple-50 { background-color: rgba(168, 85, 247, 0.1) !important; }
+.dark .bg-orange-50 { background-color: rgba(249, 115, 22, 0.1) !important; }
+.dark .bg-indigo-50 { background-color: rgba(99, 102, 241, 0.1) !important; }
+.dark .bg-gray-50\/70 { background-color: rgba(31, 41, 55, 0.7) !important; }
+.dark .bg-red-50\/50 { background-color: rgba(239, 68, 68, 0.08) !important; }
+
+/* Dark mode hover states */
+.dark .hover\:bg-gray-100:hover { background-color: #374151 !important; }
+.dark .hover\:bg-gray-50:hover { background-color: #1f2937 !important; }
+
+.input {
+  @apply w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 transition;
+}
+
+.btn-primary {
+  @apply text-white font-semibold px-5 py-2 rounded-lg transition;
+  background: var(--brand-primary);
+  box-shadow: var(--card-shadow);
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.btn-secondary {
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-2 rounded-lg shadow-md transition;
+}
+
+.step-circle {
+  @apply w-10 h-10 flex items-center justify-center rounded-full text-white z-10;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-ghost {
+  @apply bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 px-4 py-2 rounded-lg transition;
+}
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.card-lg {
+  @apply p-6;
+  background: var(--surface);
+  border-radius: calc(var(--radius-lg) + 0.25rem);
+  box-shadow: var(--card-shadow-strong);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+/* subtle fade & slide animations */
+.fade-up {
+  animation: fadeUp 0.6s ease both;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pulse-slow {
+  animation: pulse 2.5s infinite;
+}
+
+/* Slightly stronger topbar shadow for separation */
+.topbar-elevate {
+  @apply shadow-sm;
+}
+
+/* Compact buttons and section headings */
+.btn-sm {
+  @apply px-3 py-1 rounded-md text-sm font-medium;
+}
+.section-title {
+  @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+/* highlight text style for TSAR-IT */
+.brand-highlight {
+  background: linear-gradient(
+    90deg,
+    var(--brand-primary) 0%,
+    var(--brand-accent) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* responsive image utility (used for hero background overlay) */
+.hero-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.95) 70%
+  );
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: -999px;
+  transition:
+    left 0.15s ease,
+    top 0.15s ease;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 60;
+}
+
+/* Focus visible styles for keyboard users */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(14, 165, 164, 0.14);
+  border-radius: 6px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(14, 165, 164, 0.14);
+  border-radius: 6px;
+}

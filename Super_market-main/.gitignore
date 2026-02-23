@@ -1,26 +1,49 @@
-# Eclipse
-.metadata/
-.classpath
-.project
-.settings/
+# Dependencies
+node_modules/
 
-# Java
-*.class
+# Build outputs
+dist/
+build/
 target/
 
-# Logs
+# Log files
 *.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.iml
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Docker
+# Environment files
 .env
 .env.local
 .env.*.local
 
-# Deployment scripts (keep .sh/.ps1/.bat in repo)
-# deploy.sh
-# deploy.ps1
-# deploy.bat
+# Database files
+*.mv.db
+*.trace.db
+
+# Java build artifacts
+*.class
+*.jar
+*.war
+
+# Error logs
+hs_err_pid*.log
+replay_pid*.log
+
+# Temporary files
+tmp_*.sh
+*.tmp
+*.temp
+
+# Uploads (keep structure, ignore content)
+uploads/tickets/
+
+# Server patches
+server_patch/

@@ -80,4 +80,143 @@ public class Onboarding {
             completedAt = LocalDateTime.now();
         }
     }
+
+    // Explicit Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Boolean getIsCompleted() {
+        return isCompleted;
+    }
+
+    public void setIsCompleted(Boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
+
+    public Boolean getIsSkipped() {
+        return isSkipped;
+    }
+
+    public void setIsSkipped(Boolean isSkipped) {
+        this.isSkipped = isSkipped;
+    }
+
+    public Integer getCurrentStep() {
+        return currentStep;
+    }
+
+    public void setCurrentStep(Integer currentStep) {
+        this.currentStep = currentStep;
+    }
+
+    public Boolean getPersonalInfoCompleted() {
+        return personalInfoCompleted;
+    }
+
+    public void setPersonalInfoCompleted(Boolean personalInfoCompleted) {
+        this.personalInfoCompleted = personalInfoCompleted;
+    }
+
+    public Boolean getShopDetailsCompleted() {
+        return shopDetailsCompleted;
+    }
+
+    public void setShopDetailsCompleted(Boolean shopDetailsCompleted) {
+        this.shopDetailsCompleted = shopDetailsCompleted;
+    }
+
+    public Boolean getDocumentsUploaded() {
+        return documentsUploaded;
+    }
+
+    public void setDocumentsUploaded(Boolean documentsUploaded) {
+        this.documentsUploaded = documentsUploaded;
+    }
+
+    public String getGstCertificatePath() {
+        return gstCertificatePath;
+    }
+
+    public void setGstCertificatePath(String gstCertificatePath) {
+        this.gstCertificatePath = gstCertificatePath;
+    }
+
+    public String getShopRegistrationCertificatePath() {
+        return shopRegistrationCertificatePath;
+    }
+
+    public void setShopRegistrationCertificatePath(String shopRegistrationCertificatePath) {
+        this.shopRegistrationCertificatePath = shopRegistrationCertificatePath;
+    }
+
+    public String getPanCardPath() {
+        return panCardPath;
+    }
+
+    public void setPanCardPath(String panCardPath) {
+        this.panCardPath = panCardPath;
+    }
+
+    public String getAadhaarCardPath() {
+        return aadhaarCardPath;
+    }
+
+    public void setAadhaarCardPath(String aadhaarCardPath) {
+        this.aadhaarCardPath = aadhaarCardPath;
+    }
+
+    public String getOtherDocumentsPaths() {
+        return otherDocumentsPaths;
+    }
+
+    public void setOtherDocumentsPaths(String otherDocumentsPaths) {
+        this.otherDocumentsPaths = otherDocumentsPaths;
+    }
+
+    public String getBusinessInfo() {
+        return businessInfo;
+    }
+
+    public void setBusinessInfo(String businessInfo) {
+        this.businessInfo = businessInfo;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+         
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
+    }
 }
+                 

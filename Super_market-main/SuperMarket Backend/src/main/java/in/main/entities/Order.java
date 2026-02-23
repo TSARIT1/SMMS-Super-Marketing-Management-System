@@ -57,7 +57,19 @@ public void setOrderNumber(String orderNumber) {
 
     private int items;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @jakarta.persistence.Column(name = "mrp_total")
+    private Double mrpTotal;
+
+    @jakarta.persistence.Column(name = "discount")
+    private Double discount;
+
+    @jakarta.persistence.Column(name = "tax_amount")
+    private Double taxAmount;
+
+    @jakarta.persistence.Column(name = "customer_phone")
+    private String customerPhone;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = jakarta.persistence.FetchType.EAGER)
     @JsonManagedReference
     private List<OrderItem> orderItems;
 
@@ -117,5 +129,37 @@ public void setOrderNumber(String orderNumber) {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public Double getMrpTotal() {
+        return mrpTotal;
+    }
+
+    public void setMrpTotal(Double mrpTotal) {
+        this.mrpTotal = mrpTotal;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public Double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(Double taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public String getCustomerPhone() {
+        return customerPhone;
+    }
+
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
     }
 }

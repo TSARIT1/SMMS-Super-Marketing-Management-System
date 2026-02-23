@@ -1,11 +1,10 @@
 package in.main.service;
 
-import in.main.entities.AuditLog;
-import in.main.entities.AuditLog.ActionType;
-import in.main.entities.AuditLog.EntityType;
-import in.main.entities.AuditLog.ActionStatus;
-import in.main.repository.AuditLogRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,10 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import in.main.entities.AuditLog;
+import in.main.entities.AuditLog.ActionStatus;
+import in.main.entities.AuditLog.ActionType;
+import in.main.entities.AuditLog.EntityType;
+import in.main.repository.AuditLogRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class AuditLogService {
@@ -74,10 +75,17 @@ public class AuditLogService {
         auditLog.setUserId(userId);
         auditLog.setUserName(userName);
         auditLog.setUserRole(userRole);
+        // Prevent duplicate logs for same user/action within 10 seconds
+        LocalDateTime since = LocalDateTime.now().minusSeconds(10);
+        List<AuditLog> recentLogs = auditLogRepository.findRecentByUserIdAndActionType(userId, actionType, since);
+        if (!recentLogs.isEmpty()) {
+            return recentLogs.get(0);
+        }
         auditLog.setActionType(actionType);
         auditLog.setEntityType(entityType);
         auditLog.setActionDescription(actionDescription);
         auditLog.setStatus(ActionStatus.SUCCESS);
+        auditLog.setUniqueRequestId(java.util.UUID.randomUUID().toString());
         
         // Extract request details
         if (request != null) {
