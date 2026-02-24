@@ -12,8 +12,9 @@ import {
 
 export default function InventoryStatusChart({ data = [] }) {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
+    <div style={{ minWidth: 0, minHeight: 300 }} className="chart-container">
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="category" />
         <YAxis />
@@ -23,6 +24,7 @@ export default function InventoryStatusChart({ data = [] }) {
         <Bar dataKey="lowStock" fill="#F59E0B" name="Low Stock" />
         <Bar dataKey="outOfStock" fill="#EF4444" name="Out of Stock" />
       </BarChart>
-    </ResponsiveContainer>
+      </ResponsiveContainer>
+    </div>
   );
 }

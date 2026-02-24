@@ -3,6 +3,8 @@ package in.main.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProfileServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -308,24 +312,24 @@ public class ProfileServiceImpl implements ProfileService {
 
         // ===== FILE UPLOADS =====
         if (profilePhoto != null && !profilePhoto.isEmpty()) {
-            System.out.println("📸 Saving profile photo: " + profilePhoto.getOriginalFilename());
+            logger.debug("Saving profile photo: {}", profilePhoto.getOriginalFilename());
             String savedFileName = fileStorageService.save(profilePhoto);
-            System.out.println("📸 Profile photo saved as: " + savedFileName);
+            logger.debug("Profile photo saved as: {}", savedFileName);
             profile.setProfilePhoto(savedFileName);
         } else {
-            System.out.println("📸 No profile photo to save (file is null or empty)");
+            logger.debug("No profile photo to save (file is null or empty)");
         }
 
         if (qrCode != null && !qrCode.isEmpty()) {
-            System.out.println("📸 Saving QR code: " + qrCode.getOriginalFilename());
+            logger.debug("Saving QR code: {}", qrCode.getOriginalFilename());
             String savedFileName = fileStorageService.save(qrCode);
-            System.out.println("📸 QR code saved as: " + savedFileName);
+            logger.debug("QR code saved as: {}", savedFileName);
             profile.setQrCode(savedFileName);
         }
 
         Profile savedProfile = profileRepository.save(profile);
-        System.out.println("✅ Profile saved successfully with ID: " + savedProfile.getId());
-        System.out.println("📸 Profile photo in DB: " + savedProfile.getProfilePhoto());
+        logger.info("Profile saved successfully with ID: {}", savedProfile.getId());
+        logger.debug("Profile photo in DB: {}", savedProfile.getProfilePhoto());
         return mapToResponse(savedProfile, user);
     }
 
@@ -443,7 +447,7 @@ public class ProfileServiceImpl implements ProfileService {
             referralCode = shopName.toUpperCase().replaceAll("[^A-Z0-9]", "").substring(0, Math.min(shopName.length(), 6)) + String.format("%04d", user != null ? user.getId() : System.currentTimeMillis() % 10000);
             profile.setReferralCode(referralCode);
             profileRepository.save(profile);
-            System.out.println("📸 Generated new referral code: " + referralCode);
+            logger.debug("Generated new referral code: {}", referralCode);
         }
         res.setReferral_code(referralCode);
         res.setReference_code(referralCode); // Same as referral_code for compatibility
@@ -492,7 +496,7 @@ public class ProfileServiceImpl implements ProfileService {
                 return url.toString();
             }
         } catch (Exception e) {
-            System.err.println("⚠️ Could not determine base URL from request: " + e.getMessage());
+            logger.warn("Could not determine base URL from request: {}", e.getMessage());
         }
         
         // Fallback to localhost

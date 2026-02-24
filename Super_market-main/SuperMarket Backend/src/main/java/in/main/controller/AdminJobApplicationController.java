@@ -1,6 +1,7 @@
 package in.main.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.main.entities.Job;
 import in.main.entities.JobApplication;
 import in.main.entities.JobApplication.ApplicationStatus;
 import in.main.service.JobApplicationService;
-import in.main.service.JobService;
 
 @RestController
 @RequestMapping("/api/admin/applications")
@@ -27,22 +26,9 @@ public class AdminJobApplicationController {
     @Autowired
     private JobApplicationService jobApplicationService;
 
-    @Autowired
-    private JobService jobService;
-
     @GetMapping
     public ResponseEntity<List<JobApplication>> getAllApplications() {
         List<JobApplication> applications = jobApplicationService.getAllApplications();
-        return ResponseEntity.ok(applications);
-    }
-
-    @GetMapping("/job/{jobId}")
-    public ResponseEntity<List<JobApplication>> getApplicationsByJob(@PathVariable Long jobId) {
-        Job job = jobService.getJobById(jobId);
-        if (job == null) {
-            return ResponseEntity.notFound().build();
-        }
-        List<JobApplication> applications = jobApplicationService.getApplicationsByJob(job);
         return ResponseEntity.ok(applications);
     }
 
@@ -56,12 +42,21 @@ public class AdminJobApplicationController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<JobApplication> updateApplicationStatus(@PathVariable Long id, @RequestBody ApplicationStatus status) {
-        JobApplication updatedApplication = jobApplicationService.updateApplicationStatus(id, status);
-        if (updatedApplication == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<JobApplication> updateApplicationStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        String statusStr = request.get("status");
+        if (statusStr == null || statusStr.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(updatedApplication);
+        try {
+            ApplicationStatus status = ApplicationStatus.valueOf(statusStr);
+            JobApplication updatedApplication = jobApplicationService.updateApplicationStatus(id, status);
+            if (updatedApplication == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(updatedApplication);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")

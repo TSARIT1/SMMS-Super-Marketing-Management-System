@@ -157,12 +157,41 @@ export default function Onboarding() {
     navigate("/dashboard");
   };
 
+  // Get user ID from localStorage
+  const getUserId = () => {
+    try {
+      const adminRaw = localStorage.getItem("admin");
+      if (adminRaw) {
+        const admin = JSON.parse(adminRaw);
+        return admin?.id;
+      }
+    } catch { /* ignore */ }
+    try {
+      const userRaw = localStorage.getItem("user");
+      if (userRaw) {
+        const user = JSON.parse(userRaw);
+        return user?.id;
+      }
+    } catch { /* ignore */ }
+    return null;
+  };
+
   const handleComplete = async () => {
     if (!validateStep(step)) return;
 
     setLoading(true);
     try {
+      const userId = getUserId();
+      if (!userId) {
+        toast.error("User session not found. Please login again.");
+        navigate("/login");
+        return;
+      }
+
       const formData = new FormData();
+
+      // Add userId first (required by backend)
+      formData.append("userId", userId);
 
       // Add basic data
       formData.append("fullName", onboardingData.fullName);
@@ -192,8 +221,8 @@ export default function Onboarding() {
       }
 
       // Add other documents
-      onboardingData.otherDocuments.forEach((file, index) => {
-        formData.append(`otherDocuments`, file);
+      onboardingData.otherDocuments.forEach((file) => {
+        formData.append("otherDocuments", file);
       });
 
       // Submit onboarding data

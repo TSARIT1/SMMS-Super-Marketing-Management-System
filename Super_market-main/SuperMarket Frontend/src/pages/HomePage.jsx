@@ -48,7 +48,7 @@ import tsarItLogo from "../assets/tsar-it-logo.png";
 const HERO_IMAGE =
   "https://s3-alpha.figma.com/hub/file/5756596760/4a94ee92-e636-45d7-bdc2-ee4161a55553-cover.png";
 const COUNTER_IMAGE =
-  "https://i.pinimg.com/474x/0e/cc/bf/0eccbfe09300ca7e61a634419c9acfdd.jpg";
+  "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=474&h=354&fit=crop";
 const STORE_INTERIOR =
   "https://media.istockphoto.com/id/1142105235/photo/view-of-supermarket-interior-snacks-section.jpg?s=612x612&w=0&k=20&c=mIvBBopdc03XwG9rW1jseko-OqtBEH3tREojYVSgsy8=";
 const DASHBOARD_IMAGE =
@@ -231,6 +231,8 @@ export default function HomePage() {
   // Demo SSE: open EventSource when demo modal is visible
   const [demoStats, setDemoStats] = useState({ todaySales: 0, pendingOrders: 0, activeStores: 0 });
   const demoSourceRef = useRef(null);
+  const demoIntervalRef = useRef(null);
+  const demoConnectedRef = useRef(false);
 
   useEffect(() => {
     if (!showDemo) {
@@ -238,25 +240,80 @@ export default function HomePage() {
         demoSourceRef.current.close();
         demoSourceRef.current = null;
       }
+      if (demoIntervalRef.current) {
+        clearInterval(demoIntervalRef.current);
+        demoIntervalRef.current = null;
+      }
       return;
     }
 
-    const src = new EventSource('/api/demo/stream');
-    demoSourceRef.current = src;
+    // Build SSE URL - prefer explicit API URL if provided
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    const sseUrl = apiBase
+      ? `${apiBase.replace(/\/$/, '')}/api/demo/stream`
+      : '/api/demo/stream';
 
-    src.addEventListener('demo-stats', (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        setDemoStats(data);
-      } catch (err) {
-        console.error('Invalid demo event', err);
+    let didConnect = false;
+    try {
+      const src = new EventSource(sseUrl);
+      demoSourceRef.current = src;
+
+      src.addEventListener('demo-stats', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          setDemoStats(data);
+        } catch (err) {
+          console.error('Invalid demo event', err);
+        }
+      });
+
+      src.onopen = () => {
+        didConnect = true;
+        demoConnectedRef.current = true;
+        // clear any fallback interval
+        if (demoIntervalRef.current) {
+          clearInterval(demoIntervalRef.current);
+          demoIntervalRef.current = null;
+        }
+      };
+
+      src.onerror = (err) => {
+        console.error('EventSource error', err);
+        // If we haven't successfully opened, fallback to simulated demo
+        if (!didConnect) {
+          try { src.close(); } catch (e) {}
+          demoSourceRef.current = null;
+          demoConnectedRef.current = false;
+          // Start simulated demo stats if backend SSE isn't available
+          if (!demoIntervalRef.current) {
+            demoIntervalRef.current = setInterval(() => {
+              setDemoStats({
+                todaySales: Math.floor(5000 + Math.random() * 2000),
+                pendingOrders: Math.floor(5 + Math.random() * 50),
+                activeStores: Math.floor(50 + Math.random() * 150),
+              });
+            }, 1500);
+          }
+        } else {
+          // If already connected and later errored, close cleanly
+          try { src.close(); } catch (e) {}
+          demoSourceRef.current = null;
+          demoConnectedRef.current = false;
+        }
+      };
+    } catch (err) {
+      console.error('Failed to create EventSource', err);
+      // fallback to simulated demo
+      if (!demoIntervalRef.current) {
+        demoIntervalRef.current = setInterval(() => {
+          setDemoStats({
+            todaySales: Math.floor(5000 + Math.random() * 2000),
+            pendingOrders: Math.floor(5 + Math.random() * 50),
+            activeStores: Math.floor(50 + Math.random() * 150),
+          });
+        }, 1500);
       }
-    });
-
-    src.onerror = (err) => {
-      console.error('EventSource error', err);
-      src.close();
-    };
+    }
 
     return () => {
       if (demoSourceRef.current) {

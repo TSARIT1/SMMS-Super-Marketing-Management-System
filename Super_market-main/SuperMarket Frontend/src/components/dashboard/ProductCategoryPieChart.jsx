@@ -21,8 +21,9 @@ const COLORS = [
 
 export default function ProductCategoryPieChart({ data = [] }) {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <PieChart>
+    <div style={{ minWidth: 0, minHeight: 300 }} className="chart-container">
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
         <Pie
           data={data}
           cx="50%"
@@ -42,6 +43,7 @@ export default function ProductCategoryPieChart({ data = [] }) {
         <Tooltip formatter={(value) => [value, "Products"]} />
         <Legend />
       </PieChart>
-    </ResponsiveContainer>
+      </ResponsiveContainer>
+    </div>
   );
 }

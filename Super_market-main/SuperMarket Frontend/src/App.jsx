@@ -37,6 +37,7 @@ const ProfileSubscription = lazy(() => import("./pages/ProfileSubscription"));
 const ProfilePayment = lazy(() => import("./pages/ProfilePayment"));
 const ProfileSupport = lazy(() => import("./pages/ProfileSupport"));
 const ProfileDevices = lazy(() => import("./pages/ProfileDevices"));
+const ProfileOnboarding = lazy(() => import("./pages/ProfileOnboarding"));
 const Onboarding = lazy(() => import("./pages/Onboarding"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const UserSupportTickets = lazy(() => import("./pages/UserSupportTickets"));
@@ -57,6 +58,7 @@ const SuperAdminSettings = lazy(() => import("./pages/SuperAdminSettings"));
 const SuperAdminReports = lazy(() => import("./pages/SuperAdminReports"));
 const SuperAdminSalesMarketing = lazy(() => import("./pages/SuperAdminSalesMarketing"));
 const SuperAdminAIOperations = lazy(() => import("./pages/SuperAdminAIOperations"));
+const VoiceTest = lazy(() => import("./pages/VoiceTest"));
 
 // Other pages (lazy)
 const Careers = lazy(() => import("./pages/Careers"));
@@ -245,6 +247,16 @@ const App = () => {
                 <ProtectedRoute>
                   <ProfileLayout>
                     <ProfileDevices />
+                  </ProfileLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/onboarding"
+              element={
+                <ProtectedRoute>
+                  <ProfileLayout>
+                    <ProfileOnboarding />
                   </ProfileLayout>
                 </ProtectedRoute>
               }
@@ -469,6 +481,26 @@ const App = () => {
                   <SuperAdminLayout>
                     <SuperAdminAIOperations />
                   </SuperAdminLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/superadmin/voice-test"
+              element={
+                <ProtectedRoute requireAdmin={true}>
+                  <SuperAdminLayout>
+                    <VoiceTest />
+                  </SuperAdminLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/voice-test"
+              element={
+                <ProtectedRoute>
+                  <PageContainer>
+                    <VoiceTest />
+                  </PageContainer>
                 </ProtectedRoute>
               }
             />

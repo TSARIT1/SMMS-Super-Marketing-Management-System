@@ -1,6 +1,7 @@
 package in.main.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -67,11 +68,20 @@ public class AdminJobController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Job> updateJobStatus(@PathVariable Long id, @RequestBody JobStatus status) {
-        Job updatedJob = jobService.updateJobStatus(id, status);
-        if (updatedJob == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Job> updateJobStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        String statusStr = request.get("status");
+        if (statusStr == null || statusStr.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(updatedJob);
+        try {
+            JobStatus status = JobStatus.valueOf(statusStr);
+            Job updatedJob = jobService.updateJobStatus(id, status);
+            if (updatedJob == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(updatedJob);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

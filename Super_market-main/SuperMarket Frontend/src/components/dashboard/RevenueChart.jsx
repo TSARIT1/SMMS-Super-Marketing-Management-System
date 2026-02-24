@@ -12,8 +12,9 @@ import {
 
 export default function RevenueChart({ data = [], formatCurrency = (v) => v }) {
   return (
-    <ResponsiveContainer width="100%" height={260}>
-      <LineChart data={data}>
+    <div style={{ minWidth: 0, minHeight: 260 }} className="chart-container">
+      <ResponsiveContainer width="100%" height={260}>
+        <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
         <YAxis
@@ -31,6 +32,7 @@ export default function RevenueChart({ data = [], formatCurrency = (v) => v }) {
           animationDuration={800}
         />
       </LineChart>
-    </ResponsiveContainer>
+      </ResponsiveContainer>
+    </div>
   );
 }

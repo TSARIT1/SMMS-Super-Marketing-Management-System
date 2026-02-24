@@ -3,7 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   User, MapPin, Clock, Sparkles, Percent, CreditCard,
   Layers, ChevronRight, Building, Store, Settings,
-  LogOut, ChevronDown, Menu, X, Headphones, HardDrive
+  LogOut, ChevronDown, Menu, X, Headphones, HardDrive,
+  FileCheck
 } from "lucide-react";
 import Navbar from "./Navbar";
 import api from "../utils/api";
@@ -81,6 +82,14 @@ const profileSections = [
     desc: "Printers, scanners & more",
     color: "from-slate-500 to-gray-600"
   },
+  {
+    id: "onboarding",
+    label: "Onboarding",
+    icon: FileCheck,
+    path: "/profile/onboarding",
+    desc: "Business setup & verification",
+    color: "from-indigo-500 to-purple-600"
+  },
 ];
 
 const ProfileLayout = ({ children }) => {
@@ -88,6 +97,7 @@ const ProfileLayout = ({ children }) => {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [imgError, setImgError] = useState(false);
 
   // Get user info from localStorage
   const getUserInfo = () => {
@@ -125,9 +135,43 @@ const ProfileLayout = ({ children }) => {
       try {
         const resp = await api.get("/profile", { params: { email: user.email } });
         if (resp.data?.profile_photo) {
-          setProfilePhoto(resp.data.profile_photo);
+          // Fix URL: use the correct API base URL instead of hardcoded localhost
+          let photoUrl = resp.data.profile_photo;
+          const apiBaseUrl = import.meta.env.VITE_API_URL || '';
+          const isLocalHost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+          // If the URL is a relative path, prepend the API base URL if configured, otherwise use a proxied relative path
+          if (photoUrl && !photoUrl.startsWith('http')) {
+            const path = photoUrl.startsWith('/') ? photoUrl.slice(1) : photoUrl;
+            const encoded = path.split('/').map(encodeURIComponent).join('/');
+            photoUrl = apiBaseUrl ? `${apiBaseUrl.replace(/\/$/, '')}/${encoded}` : `/${encoded}`;
+          }
+          // If the URL contains localhost:8080, keep it when developing locally; otherwise, rewrite to the configured API base (and encode)
+          else if (photoUrl && photoUrl.includes('localhost:8080')) {
+            if (isLocalHost || !apiBaseUrl) {
+              // keep original localhost URL for local development
+              photoUrl = encodeURI(photoUrl);
+            } else {
+              const parts = photoUrl.replace('http://localhost:8080/', '').split('/');
+              const encoded = parts.map(encodeURIComponent).join('/');
+              photoUrl = `${apiBaseUrl.replace(/\/$/, '')}/${encoded}`;
+            }
+          } else if (photoUrl) {
+            // Ensure fully-qualified URLs have their path encoded (preserve protocol and host)
+            try {
+              const u = new URL(photoUrl);
+              const encodedPath = u.pathname.split('/').map(encodeURIComponent).join('/');
+              photoUrl = `${u.protocol}//${u.host}${encodedPath}${u.search}`;
+            } catch (e) {
+              // fallback: encode whole string
+              photoUrl = encodeURI(photoUrl);
+            }
+          }
+
+          setProfilePhoto(photoUrl);
         }
       } catch (err) {
+        // Silently handle error - profile photo is optional
         console.debug("Failed to fetch profile photo:", err);
       }
     };
@@ -138,6 +182,11 @@ const ProfileLayout = ({ children }) => {
     window.addEventListener("profile:update", handleProfileUpdate);
     return () => window.removeEventListener("profile:update", handleProfileUpdate);
   }, [user.email]);
+
+  // Reset image error when profilePhoto changes
+  useEffect(() => {
+    setImgError(false);
+  }, [profilePhoto]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -195,19 +244,19 @@ const ProfileLayout = ({ children }) => {
               <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-5 text-white">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 overflow-hidden">
-                    {profilePhoto ? (
-                      <img 
-                        src={profilePhoto} 
-                        alt="Profile" 
+                    {profilePhoto && !imgError ? (
+                      <img
+                        src={profilePhoto}
+                        alt="Profile"
                         className="w-full h-full object-cover"
-                        onError={(e) => {
+                        onError={() => {
                           console.warn("Failed to load profile photo:", profilePhoto);
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
+                          setImgError(true);
                         }}
                       />
-                    ) : null}
-                    <Store className={`w-7 h-7 ${profilePhoto ? 'hidden' : ''}`} />
+                    ) : (
+                      <Store className="w-7 h-7" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-lg truncate">{user.name}</h3>

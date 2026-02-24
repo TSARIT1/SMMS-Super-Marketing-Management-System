@@ -2,6 +2,8 @@ package in.main.controller;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:8081", "http://localhost:8082", "https://smms.tsaritservices.com"}, allowCredentials = "true")
 public class ProfileController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
+
     @Autowired
     private ProfileService profileService;
 
@@ -49,14 +53,14 @@ public class ProfileController {
             Authentication authentication
     ) {
         try {
-            System.out.println("🔥 UPDATE PROFILE API HIT");
-            System.out.println("📸 Profile Photo received: " + (profilePhoto != null ? "YES" : "NO"));
+            logger.debug("UPDATE PROFILE API HIT");
+            logger.debug("Profile Photo received: {}", (profilePhoto != null ? "YES" : "NO"));
             if (profilePhoto != null && !profilePhoto.isEmpty()) {
-                System.out.println("📸 Profile Photo filename: " + profilePhoto.getOriginalFilename());
-                System.out.println("📸 Profile Photo size: " + profilePhoto.getSize() + " bytes");
-                System.out.println("📸 Profile Photo content type: " + profilePhoto.getContentType());
+                logger.debug("Profile Photo filename: {}", profilePhoto.getOriginalFilename());
+                logger.debug("Profile Photo size: {} bytes", profilePhoto.getSize());
+                logger.debug("Profile Photo content type: {}", profilePhoto.getContentType());
             }
-            System.out.println("📸 QR Code received: " + (qrCode != null ? "YES" : "NO"));
+            logger.debug("QR Code received: {}", (qrCode != null ? "YES" : "NO"));
             User user = null;
             if (authentication != null && authentication.getPrincipal() != null) {
                 Object principal = authentication.getPrincipal();
@@ -80,14 +84,14 @@ public class ProfileController {
             }
 
             if (user == null && (resolvedAccountEmail == null || resolvedAccountEmail.isBlank())) {
-                System.err.println("❌ Email is null or blank");
+                logger.warn("Email is null or blank");
                 return ResponseEntity.badRequest().body(null);
             }
             if (user == null) {
                 final String accountEmail = resolvedAccountEmail;
                 user = userRepository.findByEmail(accountEmail)
                         .orElseGet(() -> {
-                            System.out.println("ℹ️ Creating new user for email: " + accountEmail);
+                            logger.info("Creating new user for email: {}", accountEmail);
                             User newUser = new User();
                             newUser.setEmail(accountEmail);
                             newUser.setShopName(request.getShop_name());
@@ -115,7 +119,7 @@ public class ProfileController {
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
-            System.err.println("❌ ERROR updating profile: " + e.getMessage());
+            logger.error("ERROR updating profile: {}", e.getMessage(), e);
             try {
                 String accountEmail = request.getAccount_email();
                 if (accountEmail == null || accountEmail.isBlank()) {
@@ -138,18 +142,17 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<?> getProfile(@RequestParam String email) {
 
-        System.out.println("🔥 FETCH PROFILE FOR: " + email);
+        logger.debug("FETCH PROFILE FOR: {}", email);
         try {
             ProfileResponse response = profileService.getProfile(email);
-            System.out.println("🔥 PROFILE RESPONSE: " + response);
+            logger.debug("PROFILE RESPONSE: {}", response);
             return ResponseEntity.ok(response);
         } catch (RuntimeException re) {
             // If user or profile not found, return 200 with null body so frontend gracefully handles empty profiles
-            System.err.println("❌ PROFILE NOT FOUND: " + re.getMessage());
+            logger.warn("PROFILE NOT FOUND: {}", re.getMessage());
             return ResponseEntity.ok(null);
         } catch (Exception e) {
-            System.err.println("❌ PROFILE ERROR: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("PROFILE ERROR: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }

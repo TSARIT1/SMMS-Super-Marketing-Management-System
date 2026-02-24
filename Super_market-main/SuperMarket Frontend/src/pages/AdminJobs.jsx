@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import SuperAdminLayout from '../components/SuperAdminLayout';
 import toast, { Toaster } from 'react-hot-toast';
 import { Sparkles, Brain, Star, Zap, TrendingUp, CheckCircle, AlertCircle } from 'lucide-react';
@@ -36,10 +36,11 @@ const AdminJobs = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await axios.get('/api/admin/jobs');
+      const response = await api.get('/admin/jobs');
       setJobs(response.data);
     } catch (error) {
       console.error('Error fetching jobs:', error);
+      toast.error('Failed to fetch jobs');
     } finally {
       setLoading(false);
     }
@@ -47,10 +48,11 @@ const AdminJobs = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get('/api/admin/applications');
+      const response = await api.get('/admin/applications');
       setApplications(response.data);
     } catch (error) {
       console.error('Error fetching applications:', error);
+      // Don't show error toast for applications - it's optional
     }
   };
 
@@ -66,15 +68,16 @@ const AdminJobs = () => {
     e.preventDefault();
     try {
       if (editingJob) {
-        await axios.put(`/api/admin/jobs/${editingJob.id}`, formData);
+        await api.put(`/admin/jobs/${editingJob.id}`, formData);
       } else {
-        await axios.post('/api/admin/jobs', formData);
+        await api.post('/admin/jobs', formData);
       }
       fetchJobs();
       resetForm();
+      toast.success(editingJob ? 'Job updated successfully' : 'Job created successfully');
     } catch (error) {
       console.error('Error saving job:', error);
-      alert('Failed to save job. Please try again.');
+      toast.error('Failed to save job. Please try again.');
     }
   };
 
@@ -95,7 +98,7 @@ const AdminJobs = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this job?')) {
       try {
-        await axios.delete(`/api/admin/jobs/${id}`);
+        await api.delete(`/admin/jobs/${id}`);
         fetchJobs();
         toast.success('Job deleted successfully');
       } catch (error) {
@@ -177,11 +180,12 @@ const AdminJobs = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.put(`/api/admin/jobs/${id}/status`, { status });
+      await api.put(`/admin/jobs/${id}/status`, { status });
       fetchJobs();
+      toast.success('Job status updated');
     } catch (error) {
       console.error('Error updating job status:', error);
-      alert('Failed to update job status. Please try again.');
+      toast.error('Failed to update job status. Please try again.');
     }
   };
 
@@ -265,23 +269,25 @@ const AdminJobs = () => {
 
   const handleApplicationStatusChange = async (id, status) => {
     try {
-      await axios.put(`/api/admin/applications/${id}/status`, { status });
+      await api.put(`/admin/applications/${id}/status`, { status });
       fetchApplications();
+      toast.success('Application status updated');
     } catch (error) {
       console.error('Error updating application status:', error);
-      alert('Failed to update application status. Please try again.');
+      toast.error('Failed to update application status. Please try again.');
     }
   };
 
   const handleApplicationDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this application?')) {
       try {
-        await axios.delete(`/api/admin/applications/${id}`);
+        await api.delete(`/admin/applications/${id}`);
         fetchApplications();
         setSelectedApplication(null);
+        toast.success('Application deleted successfully');
       } catch (error) {
         console.error('Error deleting application:', error);
-        alert('Failed to delete application. Please try again.');
+        toast.error('Failed to delete application. Please try again.');
       }
     }
   };

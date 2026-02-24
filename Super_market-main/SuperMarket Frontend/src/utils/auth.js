@@ -1,3 +1,39 @@
+// Helper function to parse user ID from various formats
+// Handles: number, string, or "id:role" format (e.g., "6:1")
+export function parseUserId(id) {
+  if (id == null) return null;
+  const idStr = String(id);
+  // If ID contains colon (like "6:1"), extract just the numeric part
+  const numericId = idStr.split(':')[0];
+  return numericId ? parseInt(numericId, 10) : null;
+}
+
+// Get the current user ID (from admin or user localStorage)
+// Returns a properly parsed numeric ID
+export function getCurrentUserId() {
+  try {
+    // Check admin first
+    const adminRaw = localStorage.getItem("admin");
+    if (adminRaw) {
+      const admin = JSON.parse(adminRaw);
+      if (admin?.id != null) {
+        return parseUserId(admin.id);
+      }
+    }
+    // Then check user
+    const userRaw = localStorage.getItem("user");
+    if (userRaw) {
+      const user = JSON.parse(userRaw);
+      if (user?.id != null) {
+        return parseUserId(user.id);
+      }
+    }
+  } catch (err) {
+    console.error("Error getting user ID from localStorage:", err);
+  }
+  return null;
+}
+
 // User authentication functions
 export function getUser() {
   try {

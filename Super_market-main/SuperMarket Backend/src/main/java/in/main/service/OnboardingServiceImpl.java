@@ -6,6 +6,8 @@ import in.main.entities.Onboarding;
 import in.main.entities.User;
 import in.main.repository.OnboardingRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,8 @@ import java.util.*;
 @RequiredArgsConstructor
 @Transactional
 public class OnboardingServiceImpl implements OnboardingService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OnboardingServiceImpl.class);
 
     private final OnboardingRepository onboardingRepository;
     private final ObjectMapper objectMapper;
@@ -77,7 +81,7 @@ public class OnboardingServiceImpl implements OnboardingService {
                 onboarding.setBusinessInfo(businessInfoJson);
             } catch (Exception e) {
                 // Log error but don't fail the operation
-                System.err.println("Error serializing business info: " + e.getMessage());
+                logger.warn("Error serializing business info: {}", e.getMessage());
             }
         }
 
@@ -93,13 +97,38 @@ public class OnboardingServiceImpl implements OnboardingService {
         onboarding.setShopDetailsCompleted(true);
         onboarding.setDocumentsUploaded(true);
 
-        // Store final business info
+        // Handle document paths from the data map
         if (onboardingData != null && !onboardingData.isEmpty()) {
+            // Extract and set document paths
+            if (onboardingData.containsKey("gstCertificatePath")) {
+                onboarding.setGstCertificatePath(onboardingData.get("gstCertificatePath").toString());
+            }
+            if (onboardingData.containsKey("shopRegistrationCertificatePath")) {
+                onboarding.setShopRegistrationCertificatePath(onboardingData.get("shopRegistrationCertificatePath").toString());
+            }
+            if (onboardingData.containsKey("panCardPath")) {
+                onboarding.setPanCardPath(onboardingData.get("panCardPath").toString());
+            }
+            if (onboardingData.containsKey("aadhaarCardPath")) {
+                onboarding.setAadhaarCardPath(onboardingData.get("aadhaarCardPath").toString());
+            }
+            if (onboardingData.containsKey("otherDocumentsPaths")) {
+                try {
+                    Object pathsObj = onboardingData.get("otherDocumentsPaths");
+                    if (pathsObj instanceof List) {
+                        onboarding.setOtherDocumentsPaths(objectMapper.writeValueAsString(pathsObj));
+                    }
+                } catch (Exception e) {
+                    logger.warn("Error serializing other documents paths: {}", e.getMessage());
+                }
+            }
+
+            // Store final business info
             try {
                 String businessInfoJson = objectMapper.writeValueAsString(onboardingData);
                 onboarding.setBusinessInfo(businessInfoJson);
             } catch (Exception e) {
-                System.err.println("Error serializing final business info: " + e.getMessage());
+                logger.warn("Error serializing final business info: {}", e.getMessage());
             }
         }
 
@@ -177,6 +206,9 @@ public class OnboardingServiceImpl implements OnboardingService {
                     break;
             }
 
+            // Mark documents as uploaded if any document is uploaded
+            onboarding.setDocumentsUploaded(true);
+
             onboardingRepository.save(onboarding);
             return relativePath;
 
@@ -193,7 +225,7 @@ public class OnboardingServiceImpl implements OnboardingService {
                 Files.delete(path);
             }
         } catch (IOException e) {
-            System.err.println("Failed to delete document: " + e.getMessage());
+            logger.warn("Failed to delete document: {}", e.getMessage());
         }
     }
 }

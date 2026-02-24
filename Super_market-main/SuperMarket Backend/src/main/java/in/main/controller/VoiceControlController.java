@@ -1,20 +1,24 @@
 package in.main.controller;
 
-import in.main.service.VoiceControlService;
-import in.main.service.AIService;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import in.main.service.AIService;
+import in.main.service.VoiceControlService;
 
 /**
  * Voice Control Controller for user voice commands
  */
 @RestController
-@RequestMapping("/api/voice")
+@RequestMapping("/api/voice-control")
 public class VoiceControlController {
 
     @Autowired

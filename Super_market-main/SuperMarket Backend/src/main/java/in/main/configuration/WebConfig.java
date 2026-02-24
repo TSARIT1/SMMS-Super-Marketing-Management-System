@@ -39,12 +39,31 @@ public class WebConfig implements WebMvcConfigurer {
         registry
             .addResourceHandler("/uploads/**")
             .addResourceLocations(uploadLocation);
+        
+        // Also serve onboarding uploads directly
+        Path onboardingPath = Paths.get("uploads/onboarding").toAbsolutePath().normalize();
+        File onboardingFolder = onboardingPath.toFile();
+        if (!onboardingFolder.exists()) {
+            boolean created = onboardingFolder.mkdirs();
+            System.out.println("📁 Created onboarding uploads directory: " + onboardingPath + " - Success: " + created);
+        }
+        
+        registry
+            .addResourceHandler("/onboarding-files/**")
+            .addResourceLocations(onboardingPath.toUri().toString());
     }
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // CORS for API endpoints
         registry.addMapping("/api/**")
+                .allowedOriginPatterns("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:5173", "http://localhost:8081", "http://localhost:8082", "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:8081", "http://127.0.0.1:8082", "https://smms.tsaritservices.com")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+        
+        // CORS for onboarding endpoints (including file uploads)
+        registry.addMapping("/onboarding/**")
                 .allowedOriginPatterns("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:5173", "http://localhost:8081", "http://localhost:8082", "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:8081", "http://127.0.0.1:8082", "https://smms.tsaritservices.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
@@ -72,6 +91,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/onboarding/**", configuration);
         return source;
     }
 }
