@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -255,6 +256,102 @@
     
     <!-- Main Application Script -->
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Structured Data - LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": "https://smms.tsaritservices.com/#business",
+      "name": "SMMS - Super Market Management System",
+      "alternateName": "TSAR IT SMMS",
+      "description": "Complete Super Market Management System by TSAR IT with inventory tracking, sales analytics, AI-powered insights, and multi-store support. Trusted by 1000+ businesses across India.",
+      "url": "https://smms.tsaritservices.com",
+      "logo": "https://smms.tsaritservices.com/tsar-it-logo.png",
+      "image": "https://smms.tsaritservices.com/og-image.png",
+      "telephone": "+91-8142616767",
+      "email": "info@tsaritservices.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Hyderabad",
+        "addressLocality": "Hyderabad",
+        "addressRegion": "Telangana",
+        "postalCode": "500001",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "17.3850",
+        "longitude": "78.4867"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      },
+      "priceRange": "₹999 - ₹5999",
+      "currenciesAccepted": "INR",
+      "paymentAccepted": "Credit Card, Debit Card, UPI, Net Banking",
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "sameAs": [
+        "https://twitter.com/tsaritservices",
+        "https://linkedin.com/company/tsaritservices",
+        "https://github.com/TSARIT1/SMMS-Super-Marketing-Management-System"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "1250",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+    </script>
+    
+    <!-- Structured Data - Product -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "SMMS - Super Market Management System",
+      "description": "Complete Super Market Management System with inventory tracking, sales analytics, AI-powered insights, and multi-store support",
+      "brand": {
+        "@type": "Brand",
+        "name": "TSAR IT Services"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "999",
+        "highPrice": "5999",
+        "priceCurrency": "INR",
+        "offerCount": "3"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "1250"
+      }
+    }
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SMMS SW registered:', registration.scope);
+            })
+            .catch((error) => {
+              console.log('SMMS SW registration failed:', error);
+            });
+        });
+      }
+    </script>
     
     <!-- Noscript fallback -->
     <noscript>
